@@ -222,18 +222,21 @@ function Proposta() {
         {/* 3. Introdução */}
         <section className="relative py-14 bg-section rounded-3xl px-6 my-6 border border-border/60 overflow-hidden">
           <SectionHeader title="Introdução" accent="e objeto da proposta" />
-          <div className="mt-8 flex items-center gap-3">
+          <div className="mt-8 flex items-center gap-3 flex-wrap">
             <span className="text-sm">Objeto da proposta:</span>
             <span className="rounded-full bg-accent text-accent-foreground text-sm font-medium px-4 py-1.5 shadow-glow">
-              Landing Page
+              Automação de Fluxo Produtivo
             </span>
           </div>
           <p className="mt-8 text-sm text-muted-foreground leading-relaxed">
-            A solução proposta para a Loulouxshoes é o desenvolvimento de uma Landing Page de alta
-            conversão, com identidade visual alinhada à marca, foco em performance e experiência
-            mobile-first. O projeto contempla copywriting estratégico, design exclusivo, animações
-            sutis e hospedagem profissional.
+            A solução proposta para a Loulouxshoes é o desenvolvimento de um fluxo produtivo
+            totalmente automatizado dentro do Airtable, integrando os pedidos vindos da Baggi /
+            Tiny ERP e orquestrando cada etapa — Aprovados, Programação, Corte, Artesão e Costura —
+            até a comunicação final com o cliente via Z-API. O objetivo é reduzir trabalho manual,
+            dar previsibilidade à operação e transformar o processo em parte da experiência da
+            marca.
           </p>
+
         </section>
 
         {/* 4. Sobre Luiz */}
