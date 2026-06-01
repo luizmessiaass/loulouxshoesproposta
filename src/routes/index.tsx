@@ -242,15 +242,16 @@ function Proposta() {
         {/* 4. Sobre Luiz */}
         <section className="py-14">
           <h2 className="text-3xl sm:text-4xl font-semibold leading-tight tracking-tight">
-            Product Designer focado em <span className="text-accent">UI/UX</span>,{" "}
-            <span className="text-muted-foreground">não Web Designer.</span>
+            Especialista em <span className="text-accent">automações</span> e fluxos produtivos,{" "}
+            <span className="text-muted-foreground">não apenas integrador.</span>
           </h2>
           <p className="mt-8 text-sm text-muted-foreground leading-relaxed">
-            Desenvolvo interfaces digitais pensadas para conversão e clareza. Cada projeto combina
-            estética, estratégia e tecnologia para entregar experiências que fortalecem marcas e
-            geram resultados reais.
+            Desenho fluxos operacionais que conectam ferramentas, eliminam retrabalho e dão
+            previsibilidade ao negócio. Cada automação é construída pensando em escala, clareza
+            para o time e em transformar processo em experiência de marca.
           </p>
         </section>
+
 
         {/* 5. Por trás dos projetos */}
         <section className="py-14 grid sm:grid-cols-2 gap-8 items-center">
