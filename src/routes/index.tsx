@@ -1,23 +1,42 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRight, Check, Mail, QrCode, ScanLine, Sparkles, Zap } from "lucide-react";
-import aethixLogo from "@/assets/aethix-logo-new.asset.json";
-import loulouLogo from "@/assets/loulou-logo.asset.json";
-import luizPhoto from "@/assets/luiz-photo.asset.json";
+import {
+  ArrowRight,
+  Barcode,
+  CalendarClock,
+  Check,
+  ChevronRight,
+  Clock3,
+  DatabaseZap,
+  Mail,
+  MessageCircle,
+  PackageCheck,
+  ScanLine,
+  Scissors,
+  Sparkles,
+  Workflow,
+  Zap,
+} from "lucide-react";
+import { useEffect, useRef } from "react";
 import { SectionHeader } from "@/components/proposal/SectionHeader";
+
+const aethixLogoUrl = "/assets/aethix-logo-clean.png";
+const loulouLogoUrl = "/assets/louloux-logo.jpeg";
+const luizPhotoUrl = "/assets/luiz-photo.jpeg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Proposta Comercial — Loulouxshoes | AethiX Digital" },
+      { title: "Proposta Comercial - Loulouxshoes | AethiX Digital" },
       {
         name: "description",
         content:
-          "Proposta AethiX Digital para Loulouxshoes: automação do fluxo produtivo com Airtable, Make, Z-API e baixa por QR Code.",
+          "Proposta AethiX Digital para automatizar o fluxo produtivo da Loulouxshoes com Airtable, Tiny ERP, Make, Z-API e leitura por QR Code.",
       },
-      { property: "og:title", content: "Proposta Comercial — Loulouxshoes" },
+      { property: "og:title", content: "Proposta Comercial - Loulouxshoes" },
       {
         property: "og:description",
-        content: "Automação do fluxo produtivo Loulouxshoes — Airtable + Make + Z-API + leitura QR.",
+        content:
+          "Automacao operacional para pedidos Baggi/Tiny, producao em etapas, baixa por QR Code e mensagens automaticas via Z-API.",
       },
       { property: "og:type", content: "website" },
     ],
@@ -25,463 +44,800 @@ export const Route = createFileRoute("/")({
   component: Proposta,
 });
 
-const escopo = [
-  {
-    tag: "Integração inicial",
-    items: [
-      "Conexão Tiny ERP → Airtable com importação automática dos pedidos vindos da Baggi",
-      "Sincronização dos campos: cliente, produto, prioridade, observações, e-mail, WhatsApp, barcode, foto e ficha técnica",
-      "Entrada na base 'Aprovados' com status inicial e responsável",
-    ],
-  },
-  {
-    tag: "Etapas de produção",
-    items: [
-      "Aprovados → Programação → Corte → Artesão → Costura, com regras de movimentação",
-      "Baixa de etapa por leitura de QR Code / Barcode (LOU-XXXX) diretamente pelo celular",
-      "Registro automático de quem finalizou e horário em cada etapa",
-      "Encerramento e arquivamento do pedido ao final do fluxo",
-    ],
-  },
-  {
-    tag: "Leitura QR / Barcode",
-    items: [
-      "App de leitura via câmera do celular (PWA ou Airtable mobile)",
-      "Ao apontar a câmera, a automação identifica o pedido e atualiza o status da etapa",
-      "Captura automática: artesão responsável, data e hora exata da conclusão",
-      "Validação para evitar baixas duplicadas ou fora de ordem",
-    ],
-  },
-  {
-    tag: "Automações Make + Z-API",
-    items: [
-      "Gatilho ao concluir a etapa do artesão: dispara mensagem ao cliente via Z-API com foto do responsável",
-      "Gatilho ao concluir a costura: mensagem personalizada de avanço",
-      "Variáveis dinâmicas: nome do cliente, número do pedido, produto e responsável",
-      "Logs de envio gravados no Airtable para auditoria completa",
-    ],
-  },
-  {
-    tag: "Entregáveis",
-    items: [
-      "Base Airtable estruturada e documentada",
-      "Cenários Make publicados e versionados",
-      "Templates Z-API aprovados",
-      "Treinamento da equipe (1 sessão) e manual de operação",
-    ],
-  },
+const orderFields = [
+  ["Pedido", "7239"],
+  ["Cliente", "Mariana Felix Angioletti"],
+  ["Produto", "Coque Banana - 38"],
+  ["Prioridade", "Urgente"],
+  ["Entrega sensivel", "Casamento civil em 10/07/2026"],
+  ["Barcode", "LOU-7239"],
 ];
 
-const diferenciais = [
+const flowSteps = [
   {
-    icon: Zap,
-    title: "Fluxo desenhado para a operação real",
-    text: "Cada etapa é mapeada com base no processo atual da Loulouxshoes, garantindo que a automação acompanhe a rotina do time.",
+    icon: PackageCheck,
+    title: "Aprovado",
+    description: "Pedido entra do e-commerce/Tiny com dados, anexos, itens, prioridade e barcode.",
+  },
+  {
+    icon: CalendarClock,
+    title: "Programacao",
+    description:
+      "Fila visual por urgencia, data critica, item individual e disponibilidade da fabrica.",
   },
   {
     icon: ScanLine,
-    title: "Baixa por câmera, sem fricção",
-    text: "O artesão aponta a câmera para o QR e pronto. Status, responsável e horário são registrados em segundos.",
+    title: "Corte",
+    description:
+      "Leitura optica confirma entrada/saida, imprime ficha e evita baixa fora de ordem.",
+  },
+  {
+    icon: Scissors,
+    title: "Costura",
+    description: "Responsavel confirma etapa por barcode, com data, hora e controle de parcial.",
   },
   {
     icon: Sparkles,
-    title: "Experiência do cliente como diferencial",
-    text: "Notificações com a foto do artesão criam conexão, transparência e tornam o processo parte da marca.",
+    title: "Pre-fabricado",
+    description: "Etapa intermediaria para organizar pecas antes de montagem e acabamento.",
+  },
+  {
+    icon: Workflow,
+    title: "Montagem",
+    description: "Cada item segue individualmente, mesmo quando o pedido tem multiplos produtos.",
+  },
+  {
+    icon: Check,
+    title: "Acabamento",
+    description: "Conferencia final, etiqueta de caixa e liberacao para expedicao.",
+  },
+  {
+    icon: Barcode,
+    title: "Expedicao",
+    description: "Etiqueta termica, ficha destacavel e leitura final antes do envio.",
+  },
+  {
+    icon: MessageCircle,
+    title: "Enviado",
+    description:
+      "Cliente recebe atualizacao automatica por WhatsApp/e-mail e o historico fica salvo.",
   },
 ];
 
-const cronograma = [
-  { n: "01", t: "Contrato e kick-off", d: "Assinatura, pagamento inicial e alinhamento técnico." },
-  { n: "02", t: "Mapeamento e acessos", d: "Levantamento do fluxo atual, acessos ao Tiny ERP, Airtable, Make e Z-API." },
-  { n: "03", t: "Estruturação Airtable", d: "Tabelas, views por etapa, sincronização com o Tiny e anexo de mockups." },
-  { n: "04", t: "QR / Barcode + automações", d: "Leitor por câmera, cenários Make e disparos Z-API com foto do artesão." },
-  { n: "05", t: "Testes e validação", d: "Simulação de pedidos reais e ajustes finos com a equipe." },
-  { n: "06", t: "Go-live", d: "Liberação em produção e entrega oficial do fluxo." },
-  { n: "07", t: "Treinamento e suporte", d: "Capacitação + manual + 15 dias de suporte pós-implantação." },
+const operationNeeds = [
+  "Velocidade de adaptacao",
+  "Facilidade operacional",
+  "Mudancas constantes de fluxo",
+  "Interface visual simples para a equipe de fabrica",
+  "Implementacao rapida",
+  "Autonomia operacional",
 ];
 
-const investimento = [
-  { title: "Integração Tiny ERP → Airtable", desc: "Importação automática dos pedidos com todos os campos e anexo do mockup." },
-  { title: "Estruturação completa do Airtable", desc: "Tabelas, views por etapa, automações nativas e controle de responsáveis." },
-  { title: "Baixa por QR Code / Barcode", desc: "Leitura via câmera com registro automático de responsável e horário em cada etapa." },
-  { title: "Cenários Make + Z-API", desc: "Orquestração das etapas e disparos automáticos para o cliente com foto do artesão." },
-  { title: "Treinamento, manual e suporte", desc: "Capacitação da equipe, documentação e 15 dias de suporte técnico." },
+const scope = [
+  {
+    tag: "Integracao de pedidos",
+    items: [
+      "Automacao da importacao dos pedidos que entram no e-commerce, passam pelo Tiny ERP e hoje sao levados manualmente ao Airtable.",
+      "Preenchimento dos campos essenciais: pedido, data, cliente, produto, prioridade, observacoes, e-mail, WhatsApp, foto, desenho tecnico, barcode e ultima alteracao.",
+      "Pedidos com multiplos itens passam a ser quebrados em itens produtivos individuais, mantendo vinculo com o pedido original.",
+    ],
+  },
+  {
+    tag: "Controle visual de producao",
+    items: [
+      "Status produtivos: Aprovado, Programacao, Corte, Costura, Pre-fabricado, Montagem, Acabamento, Expedicao e Enviado.",
+      "Interface simples para fabrica operar por botoes, leitura optica e cards visuais, sem precisar entender estrutura tecnica.",
+      "Campos de auditoria para data/hora de entrada, conclusao, responsavel, atrasos, prioridade e tentativas de envio.",
+    ],
+  },
+  {
+    tag: "Leitura e impressao",
+    items: [
+      "Leitores de codigo de barras por etapa para atualizar automaticamente o status do item produtivo.",
+      "Impressao de ficha fisica destacavel de producao com dados do pedido, mockup, barcode e observacoes.",
+      "Impressao de etiquetas termicas para identificacao interna e etiqueta final de caixa.",
+    ],
+  },
+  {
+    tag: "Comunicacao e fiscal",
+    items: [
+      "Comunicacao automatica por WhatsApp/e-mail em marcos definidos pela operacao.",
+      "Templates com variaveis dinamicas: nome, pedido, produto, etapa, prazo, responsavel e status parcial.",
+      "Integracao com Tiny para emissao/liberacao de NF conforme regra comercial definida.",
+      "Logs de sucesso, erro, reenvio e bloqueios gravados para auditoria.",
+    ],
+  },
+  {
+    tag: "Mini sistema bonus",
+    items: [
+      "Sistema proprio simples, com identidade visual Louloux, para intermediar etapas, leituras, impressao e comunicacao.",
+      "Construido como camada modular: sem substituir tudo de uma vez, mas pronto para crescer quando a operacao pedir.",
+      "Bonus gratuito incluso nesta proposta, sem custo adicional de desenvolvimento.",
+    ],
+  },
 ];
+
+const highlights = [
+  {
+    icon: Zap,
+    title: "Rapido sem virar sistema gigante",
+    text: "A primeira versao resolve o fluxo critico sem trocar a operacao inteira de uma vez.",
+  },
+  {
+    icon: DatabaseZap,
+    title: "Autonomia para mudar o fluxo",
+    text: "A estrutura permite adaptar status, regras e telas sem depender de grandes ciclos de desenvolvimento.",
+  },
+  {
+    icon: MessageCircle,
+    title: "Fabrica operando no simples",
+    text: "A equipe trabalha com leitura, botoes claros, fichas impressas e telas objetivas.",
+  },
+];
+
+const timeline = [
+  ["01", "Kick-off e acessos", "Alinhamento tecnico, credenciais e validacao do fluxo real."],
+  [
+    "02",
+    "Modelo operacional",
+    "Status, itens produtivos, pedidos parciais, campos e regras de leitura.",
+  ],
+  [
+    "03",
+    "Integracao Tiny/Baggi",
+    "Entrada dos pedidos aprovados com os campos e anexos necessarios.",
+  ],
+  [
+    "04",
+    "Mini sistema bonus",
+    "Tela propria para leitura, status, impressao e operacao da fabrica.",
+  ],
+  ["05", "Make + Z-API + e-mail", "Cenarios de automacao e mensagens com variaveis dinamicas."],
+  ["06", "Impressao e NF", "Ficha de producao, etiqueta termica, etiqueta final e regras Tiny/NF."],
+  ["07", "Testes reais", "Simulacao com pedidos como LOU-7239, ajuste de erros e homologacao."],
+  ["08", "Go-live assistido", "Publicacao, treinamento e acompanhamento inicial da operacao."],
+];
+
+const deliverables = [
+  "Base Airtable estruturada para producao",
+  "Views por etapa e responsavel",
+  "QR/Barcode operacional por pedido",
+  "Leitura optica por etapa",
+  "Ficha destacavel de producao",
+  "Etiqueta termica e etiqueta final de caixa",
+  "Controle de pedidos parciais",
+  "Cenarios Make publicados",
+  "Mensagens Z-API configuradas",
+  "Mini sistema bonus com identidade Louloux",
+  "Manual de operacao e treinamento",
+];
+
+const systems = [
+  {
+    name: "Baggi",
+    role: "Origem do pedido",
+  },
+  {
+    name: "Tiny ERP",
+    role: "Dados comerciais",
+  },
+  {
+    name: "Airtable",
+    role: "Painel operacional",
+  },
+  {
+    name: "Make",
+    role: "Orquestracao",
+  },
+  {
+    name: "Z-API",
+    role: "WhatsApp automatico",
+  },
+];
+
+function AethixLogo({ compact = false }: { compact?: boolean }) {
+  return (
+    <img
+      src={aethixLogoUrl}
+      alt="AethiX Digital"
+      className={compact ? "h-5 w-auto invert" : "h-12 w-auto invert sm:h-14"}
+    />
+  );
+}
+
+function SystemLogo({ name }: { name: string }) {
+  return (
+    <span
+      className="flex min-h-12 min-w-28 shrink-0 items-center justify-center rounded-xl border border-border bg-white px-4 text-sm font-black uppercase text-black"
+      aria-hidden="true"
+    >
+      {name}
+    </span>
+  );
+}
 
 function Proposta() {
+  const rootRef = useRef<HTMLElement>(null);
   const whatsapp =
     "https://wa.me/?text=" +
-    encodeURIComponent("Olá Luiz! Vamos fechar a proposta da Loulouxshoes.");
+    encodeURIComponent("Ola Luiz! Vamos fechar a proposta da Loulouxshoes.");
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion || !rootRef.current) return;
+
+    let ctx: { revert: () => void } | undefined;
+
+    async function animate() {
+      const [{ gsap }, { ScrollTrigger }] = await Promise.all([
+        import("gsap"),
+        import("gsap/ScrollTrigger"),
+      ]);
+
+      gsap.registerPlugin(ScrollTrigger);
+      ctx = gsap.context(() => {
+        gsap.from("[data-hero]", {
+          autoAlpha: 0,
+          y: 28,
+          duration: 0.85,
+          ease: "power3.out",
+          stagger: 0.08,
+        });
+
+        gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((element) => {
+          gsap.from(element, {
+            autoAlpha: 0,
+            y: 34,
+            duration: 0.75,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: element,
+              start: "top 84%",
+              once: true,
+            },
+          });
+        });
+      }, rootRef);
+    }
+
+    void animate();
+
+    return () => {
+      ctx?.revert();
+    };
+  }, []);
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
-      {/* Top bar */}
-      <nav className="sticky top-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border/60">
-        <div className="mx-auto flex max-w-screen-md items-center justify-between px-5 py-3">
-          <img src={aethixLogo.url} alt="AethiX Digital" className="h-8 w-auto invert" />
+    <main
+      ref={rootRef}
+      className="relative min-h-screen overflow-x-hidden bg-background text-foreground"
+    >
+      <nav className="sticky top-0 z-50 border-b border-border/70 bg-background/75 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
+          <a
+            href="#topo"
+            className="flex min-h-11 items-center gap-3"
+            aria-label="Voltar ao inicio"
+          >
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-border/70 bg-card/80">
+              <AethixLogo compact />
+            </span>
+            <span className="hidden text-xs uppercase tracking-[0.26em] text-muted-foreground sm:inline">
+              Proposta Loulouxshoes
+            </span>
+          </a>
           <a
             href={whatsapp}
             target="_blank"
             rel="noreferrer"
-            className="text-xs font-medium rounded-full bg-foreground text-background px-4 py-2 hover:opacity-90 transition"
+            className="inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-glow transition duration-200 hover:-translate-y-0.5 hover:bg-primary/90"
           >
             Fechar proposta
           </a>
         </div>
       </nav>
 
-      <div className="mx-auto max-w-screen-md px-5">
-        {/* 1. Capa */}
-        <section className="relative bg-hero rounded-3xl my-6 px-6 py-24 sm:py-32 overflow-hidden border border-border/60 shadow-elev noise">
-          {/* grid bg */}
-          <div className="absolute inset-0 grid-bg opacity-60 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]" />
-          {/* concentric rings */}
-          <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] animate-spin-slow opacity-20">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <span
-                key={i}
-                className="absolute inset-0 rounded-full border border-foreground/30"
-                style={{ transform: `scale(${0.4 + i * 0.15})` }}
-              />
-            ))}
-          </div>
+      <div id="topo" className="mx-auto max-w-6xl px-5">
+        <section className="relative my-6 min-h-[calc(100svh-6rem)] overflow-hidden rounded-[2rem] border border-border/70 bg-hero px-5 py-8 shadow-elev sm:px-8 lg:px-12">
+          <div className="absolute inset-0 grid-bg opacity-70 [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_76%)]" />
+          <div className="scan-orbit pointer-events-none absolute -right-28 -top-28 h-80 w-80 rounded-full border border-primary/20" />
 
-          <div className="relative flex flex-col items-center text-center gap-8 animate-fade-up">
-            <img
-              src={aethixLogo.url}
-              alt="AethiX Digital"
-              className="h-12 w-auto invert opacity-90 animate-float"
-            />
-
-            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-muted-foreground">
-              <span className="h-px w-8 bg-foreground/40" />
-              Proposta exclusiva
-              <span className="h-px w-8 bg-foreground/40" />
-            </div>
-
-            <h1 className="font-display text-5xl sm:text-6xl font-semibold leading-[0.95] tracking-tight">
-              <span className="text-shine">Loulouxshoes</span>
-            </h1>
-
-            <p className="max-w-sm text-sm text-muted-foreground leading-relaxed">
-              Automação do fluxo produtivo com Airtable, Make, Z-API e baixa por leitura de QR Code.
-            </p>
-
-            <div className="flex items-center gap-3 mt-4">
-              <img
-                src={loulouLogo.url}
-                alt="Loulouxshoes"
-                className="h-14 w-14 rounded-2xl object-cover ring-1 ring-foreground/10"
-              />
-              <span className="text-2xl text-muted-foreground font-light">×</span>
-              <div className="h-14 w-14 rounded-2xl bg-foreground/5 ring-1 ring-foreground/10 flex items-center justify-center">
-                <img src={aethixLogo.url} alt="AethiX" className="h-9 w-auto invert" />
+          <div className="relative grid min-h-[calc(100svh-10rem)] items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="animate-fade-up">
+              <div data-hero className="mb-8 flex flex-wrap items-center gap-3">
+                <img
+                  src={loulouLogoUrl}
+                  alt="Loulouxshoes"
+                  className="h-14 w-14 rounded-2xl object-cover ring-1 ring-primary/20"
+                />
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                <span className="inline-flex min-h-14 items-center rounded-2xl border border-border/70 bg-white px-4 py-2">
+                  <img src={aethixLogoUrl} alt="AethiX Digital" className="h-10 w-auto sm:h-12" />
+                </span>
               </div>
-            </div>
-          </div>
-        </section>
 
-        {/* 2. Proposta Comercial */}
-        <section className="py-16 animate-fade-up">
-          <span className="inline-block text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-4">
-            Documento 01 — 06
-          </span>
-          <h2 className="font-display text-5xl sm:text-6xl font-semibold leading-[0.95] tracking-tight">
-            Proposta
-            <br />
-            <span className="text-muted-foreground">Comercial</span>
-          </h2>
-
-          <dl className="mt-12 grid grid-cols-2 gap-x-6 gap-y-8">
-            {[
-              ["Responsável", "Luiz Messias"],
-              ["Cliente", "Cristiano Bronzatto"],
-              ["Empresa", "Loulouxshoes"],
-              ["Data", "01/06/2026"],
-            ].map(([k, v]) => (
-              <div key={k} className="border-l-2 border-foreground/30 pl-4">
-                <dt className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{k}</dt>
-                <dd className="text-base font-medium mt-2">{v}</dd>
-              </div>
-            ))}
-          </dl>
-
-          <div className="mt-12 space-y-4 text-sm text-muted-foreground leading-relaxed">
-            <p>
-              Esta proposta apresenta de forma clara os serviços de automação e integração que serão prestados,
-              o escopo do projeto, prazos, condições comerciais e especificações técnicas relevantes.
-            </p>
-            <p>
-              Este documento tem caráter informativo e estratégico, servindo para alinhar expectativas entre
-              as partes. A formalização legal ocorre exclusivamente por meio de contrato específico.
-            </p>
-          </div>
-        </section>
-
-        {/* 3. Introdução */}
-        <section className="relative py-16 bg-section rounded-3xl px-6 my-6 border border-border/60 overflow-hidden">
-          <SectionHeader title="Introdução" accent="e objeto" />
-          <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-foreground/20 bg-foreground/5 px-5 py-2">
-            <Sparkles className="h-4 w-4" />
-            <span className="text-sm font-medium">Automação de Fluxo Produtivo</span>
-          </div>
-          <p className="mt-8 text-sm text-muted-foreground leading-relaxed">
-            A solução proposta é o desenvolvimento de um fluxo produtivo totalmente automatizado dentro do
-            Airtable, integrando os pedidos vindos da Baggi e do Tiny ERP, orquestrando cada etapa do processo
-            (Aprovados, Programação, Corte, Artesão e Costura) e finalizando com comunicação automática ao
-            cliente via Z-API. O objetivo é reduzir trabalho manual, dar previsibilidade à operação e
-            transformar o processo em parte da experiência da marca.
-          </p>
-        </section>
-
-        {/* 4. Sobre */}
-        <section className="py-16">
-          <h2 className="font-display text-3xl sm:text-4xl font-semibold leading-tight tracking-tight">
-            Desenvolvedor Full Stack
-            <br />
-            <span className="text-muted-foreground">e arquiteto de automações.</span>
-          </h2>
-          <p className="mt-8 text-sm text-muted-foreground leading-relaxed">
-            Une visão técnica e operacional para transformar processos complexos em fluxos simples, integrados
-            e escaláveis — não desenvolve sistemas isolados, estrutura operações inteiras.
-          </p>
-        </section>
-
-        {/* 5. Por trás dos projetos */}
-        <section className="py-16 grid sm:grid-cols-2 gap-10 items-center">
-          <div className="order-2 sm:order-1">
-            <SectionHeader title="Por trás" accent="dos projetos" />
-            <p className="mt-6 text-sm text-muted-foreground leading-relaxed">
-              Sou Luiz Henrique Messias, fundador da AethiX Digital. Atuo como Full Stack e Tech Lead,
-              construindo plataformas SaaS, dashboards, integrações e automações para operações de e-commerce
-              e marketplaces.
-            </p>
-            <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-              Trabalho com Next.js, React, TypeScript, Node, Python, Supabase, Airtable, Make e Z-API — e
-              minha experiência cobre o ciclo completo: pedidos, estoque, faturamento, logística e
-              atendimento.
-            </p>
-            <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-              Neste projeto, a proposta vai além de entregar uma automação: é estruturar um fluxo inteligente
-              e escalável conectando Airtable, Make, Z-API e Tiny ERP para dar controle, velocidade e
-              previsibilidade à operação.
-            </p>
-          </div>
-          <div className="relative order-1 sm:order-2">
-            <div className="absolute -inset-3 rounded-3xl bg-foreground/5 blur-xl" />
-            <img
-              src={luizPhoto.url}
-              alt="Luiz Messias"
-              className="relative w-full aspect-[4/5] object-cover rounded-3xl border border-border/60"
-            />
-          </div>
-        </section>
-
-        {/* 6. Destaque QR */}
-        <section className="relative py-16 bg-section rounded-3xl px-6 my-6 border border-border/60 overflow-hidden">
-          <div className="grid sm:grid-cols-[1fr_auto] gap-8 items-center">
-            <div>
-              <span className="inline-block text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-3">
-                Novidade
-              </span>
-              <h2 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">
-                Baixa por <span className="text-shine">QR Code</span>
-              </h2>
-              <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-                O artesão aponta a câmera do celular para o QR/Barcode do pedido. Em segundos, a automação
-                identifica a etapa, atualiza o status e registra quem finalizou e o horário exato.
+              <p
+                data-hero
+                className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/8 px-4 py-2 text-xs font-medium uppercase tracking-[0.22em] text-accent"
+              >
+                <Workflow className="h-4 w-4" />
+                Automacao produtiva
               </p>
-              <ul className="mt-6 space-y-2 text-sm">
-                {["Sem digitação", "Registro automático de responsável", "Data e hora exatas", "Validação anti-duplicidade"].map((t) => (
-                  <li key={t} className="flex items-center gap-2">
-                    <Check className="h-4 w-4" /> {t}
-                  </li>
-                ))}
-              </ul>
+
+              <h1
+                data-hero
+                className="max-w-4xl font-display text-5xl font-semibold leading-[0.94] text-balance sm:text-7xl lg:text-8xl"
+              >
+                Loulouxshoes com producao rastreavel, automatizada e mais humana.
+              </h1>
+
+              <p
+                data-hero
+                className="mt-7 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg"
+              >
+                Uma solucao modular para importar pedidos, controlar etapas por leitura optica,
+                imprimir fichas e etiquetas, avisar o cliente e liberar NF sem transformar a fabrica
+                em refem de um sistema gigante.
+              </p>
+
+              <div data-hero className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <a
+                  href="#escopo"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground transition duration-200 hover:-translate-y-0.5 hover:bg-primary/90"
+                >
+                  Ver escopo <ArrowRight className="h-4 w-4" />
+                </a>
+                <a
+                  href="#investimento"
+                  className="inline-flex min-h-12 items-center justify-center rounded-full border border-border bg-background/40 px-6 text-sm font-semibold text-foreground backdrop-blur transition duration-200 hover:bg-card"
+                >
+                  Investimento e prazo
+                </a>
+              </div>
             </div>
 
-            {/* QR mock visual */}
-            <div className="relative mx-auto h-44 w-44 rounded-3xl border border-foreground/20 bg-background/60 p-4 overflow-hidden">
-              <div className="grid grid-cols-7 grid-rows-7 gap-[3px] h-full w-full">
-                {Array.from({ length: 49 }).map((_, i) => {
-                  const filled = [0,1,2,3,4,5,6,7,12,14,15,21,18,20,24,25,26,28,30,33,34,35,38,40,42,43,44,45,46,47,48].includes(i);
-                  return <span key={i} className={filled ? "bg-foreground rounded-[2px]" : ""} />;
-                })}
+            <div data-hero className="animate-fade-up [animation-delay:120ms]">
+              <div className="relative mx-auto max-w-md rounded-[1.7rem] border border-border/70 bg-background/70 p-4 shadow-elev backdrop-blur-xl">
+                <div className="rounded-[1.25rem] border border-border/70 bg-card/70 p-5">
+                  <div className="mb-5 flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">
+                        Pedido exemplo
+                      </p>
+                      <h2 className="mt-2 font-display text-3xl font-semibold">LOU-7239</h2>
+                    </div>
+                    <span className="rounded-full border border-warn/30 bg-warn/10 px-3 py-1 text-xs font-semibold text-warn">
+                      Urgente
+                    </span>
+                  </div>
+
+                  <div className="space-y-3">
+                    {orderFields.map(([label, value]) => (
+                      <div
+                        key={label}
+                        className="rounded-2xl border border-border/60 bg-background/55 px-4 py-3"
+                      >
+                        <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                          {label}
+                        </p>
+                        <p className="mt-1 text-sm font-medium text-foreground">{value}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="mt-5 grid grid-cols-[1fr_auto] items-center gap-4 rounded-2xl border border-accent/25 bg-accent/8 p-4">
+                    <div>
+                      <p className="text-xs font-semibold text-accent">Ficha tecnica inclusa</p>
+                      <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                        Foto, desenho e mockup do produto seguem com o pedido em todas as etapas.
+                      </p>
+                    </div>
+                    <Barcode className="h-9 w-9 text-accent" />
+                  </div>
+                </div>
               </div>
-              <div className="absolute inset-x-4 top-4 bottom-4 overflow-hidden pointer-events-none">
-                <div className="h-1 w-full bg-foreground/70 shadow-[0_0_20px_2px_rgba(255,255,255,0.6)] animate-scan" />
-              </div>
-              <span className="absolute inset-0 rounded-3xl border border-foreground/30 animate-pulse-ring" />
-              <QrCode className="absolute -top-2 -right-2 h-6 w-6 text-foreground/40" />
             </div>
           </div>
         </section>
 
-        {/* 7. Escopo */}
+        <section className="grid gap-5 py-12 sm:grid-cols-3">
+          {[
+            ["Cliente", "Loulouxshoes"],
+            ["Responsavel", "Luiz Messias - AethiX Digital"],
+            ["Data", "01/06/2026"],
+          ].map(([label, value]) => (
+            <div key={label} className="rounded-2xl border border-border/70 bg-card/45 p-5">
+              <p className="text-[10px] uppercase tracking-[0.24em] text-muted-foreground">
+                {label}
+              </p>
+              <p className="mt-2 text-base font-semibold">{value}</p>
+            </div>
+          ))}
+        </section>
+
+        <section data-reveal className="py-16">
+          <div className="grid gap-8 rounded-[2rem] border border-border/70 bg-card/55 p-6 sm:p-8 lg:grid-cols-[0.95fr_1.05fr] lg:p-10">
+            <div>
+              <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent/25 bg-accent/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+                Realidade da operacao
+              </p>
+              <h2 className="font-display text-4xl font-semibold leading-tight sm:text-5xl">
+                A Louloux precisa de velocidade, simplicidade e liberdade para mudar.
+              </h2>
+              <p className="mt-5 text-sm leading-7 text-muted-foreground sm:text-base">
+                O caminho correto nao e substituir tudo de imediato. E criar uma camada operacional
+                simples, visual e escalavel, que organiza o fluxo atual e permite evoluir sem travar
+                a fabrica.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {operationNeeds.map((need) => (
+                <div
+                  key={need}
+                  className="flex items-center gap-3 rounded-2xl border border-border/70 bg-background/45 p-4"
+                >
+                  <Check className="h-4 w-4 shrink-0 text-accent" />
+                  <span className="text-sm font-semibold">{need}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="py-16">
           <SectionHeader
-            title="Escopo"
-            accent="do projeto"
-            subtitle="O escopo foi estruturado com base nas informações levantadas até o momento. Ajustes ou ampliações poderão ser realizados conforme necessidade, podendo impactar prazos e valores."
+            eyebrow="Objetivo"
+            title="Da venda aprovada"
+            accent="ao produto finalizado"
+            subtitle="A proposta e desenvolver uma operacao que acompanha o pedido do momento em que ele entra como aprovado ate a conclusao das etapas produtivas, com visibilidade para o time e comunicacao automatica para o cliente."
           />
-          <p className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
-            Sugestão de fluxo <ArrowRight className="h-4 w-4" />
-          </p>
-          <div className="mt-8 grid gap-4">
-            {escopo.map((e, idx) => (
+
+          <div className="mt-10 grid gap-4 lg:grid-cols-5">
+            {flowSteps.map(({ icon: Icon, title, description }, index) => (
               <article
-                key={e.tag}
-                className="group rounded-2xl border border-border/60 bg-card/60 backdrop-blur p-6 hover:border-foreground/30 transition"
+                key={title}
+                className="group relative rounded-2xl border border-border/70 bg-card/55 p-5 transition duration-200 hover:-translate-y-1 hover:border-accent/40"
               >
-                <div className="flex items-center justify-between gap-3 mb-5">
-                  <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-                    Etapa {String(idx + 1).padStart(2, "0")}
+                <div className="mb-5 flex items-center justify-between">
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+                    <Icon className="h-5 w-5" />
                   </span>
-                  <span className="rounded-full bg-foreground text-background text-xs font-medium px-3 py-1">
-                    {e.tag}
+                  <span className="font-display text-3xl font-semibold text-foreground/20">
+                    {String(index + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <ol className="divide-y divide-border/60">
-                  {e.items.map((it, i) => (
-                    <li key={it} className="py-3 text-sm text-muted-foreground flex gap-3">
-                      <span className="text-foreground/40 font-mono text-xs pt-0.5">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <span>{it}</span>
+                <h3 className="text-lg font-semibold">{title}</h3>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">{description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="relative my-6 overflow-hidden rounded-[2rem] border border-border/70 bg-section px-6 py-16 sm:px-8 lg:px-10">
+          <div className="absolute inset-0 grid-bg opacity-30" />
+          <div className="relative grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div>
+              <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent/25 bg-accent/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+                <ScanLine className="h-4 w-4" />
+                Recomendacao tecnica
+              </p>
+              <h2 className="font-display text-4xl font-semibold leading-tight sm:text-5xl">
+                Melhor que "bipar": confirmar por QR com contexto.
+              </h2>
+              <p className="mt-5 text-sm leading-7 text-muted-foreground sm:text-base">
+                O leitor fisico funciona, mas adiciona custo e depende de equipamento. Para este
+                fluxo, a melhor primeira versao e um QR Code por pedido abrindo uma tela simples: o
+                responsavel confere pedido, produto e etapa, toca em confirmar e a automacao faz o
+                resto.
+              </p>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {[
+                ["Evita erro", "O usuario ve o pedido antes de concluir a etapa."],
+                ["Funciona no celular", "Sem instalar leitor dedicado na fase inicial."],
+                ["Tem auditoria", "Responsavel, data, hora e etapa ficam gravados."],
+                [
+                  "Escala depois",
+                  "Se fizer sentido, o mesmo barcode pode ser usado com scanner fisico.",
+                ],
+              ].map(([title, text]) => (
+                <div
+                  key={title}
+                  className="rounded-2xl border border-border/70 bg-background/50 p-5 backdrop-blur"
+                >
+                  <Check className="mb-4 h-5 w-5 text-accent" />
+                  <h3 className="font-semibold">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="escopo" className="py-16">
+          <SectionHeader
+            eyebrow="Escopo"
+            title="O que sera"
+            accent="desenvolvido"
+            subtitle="O escopo abaixo cobre a primeira versao funcional do fluxo, com foco em operacao real, rastreabilidade e automacoes que reduzem tarefas manuais."
+          />
+
+          <div className="mt-10 grid gap-5">
+            {scope.map((item, index) => (
+              <article
+                key={item.tag}
+                className="rounded-[1.5rem] border border-border/70 bg-card/50 p-5 sm:p-6"
+              >
+                <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-background font-display text-sm font-semibold">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <h3 className="text-lg font-semibold">{item.tag}</h3>
+                  </div>
+                  <span className="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
+                    Incluso
+                  </span>
+                </div>
+                <ol className="grid gap-3">
+                  {item.items.map((line) => (
+                    <li
+                      key={line}
+                      className="flex gap-3 rounded-2xl border border-border/55 bg-background/35 p-4 text-sm leading-6 text-muted-foreground"
+                    >
+                      <Check className="mt-1 h-4 w-4 shrink-0 text-accent" />
+                      <span>{line}</span>
                     </li>
                   ))}
                 </ol>
               </article>
             ))}
-            <p className="text-xs text-muted-foreground border border-border/60 rounded-xl px-4 py-3">
-              Custos externos sob responsabilidade da Loulouxshoes: assinaturas Airtable, Make e Z-API.
-            </p>
           </div>
         </section>
 
-        {/* 8. Diferenciais */}
-        <section className="relative py-16 bg-section rounded-3xl px-6 my-6 border border-border/60 overflow-hidden">
-          <SectionHeader title="Diferenciais" accent="do projeto" />
-          <div className="mt-10 grid gap-5">
-            {diferenciais.map(({ icon: Icon, title, text }) => (
-              <div key={title} className="rounded-2xl border border-border/60 bg-background/40 p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="h-9 w-9 rounded-xl bg-foreground text-background flex items-center justify-center">
-                    <Icon className="h-4 w-4" />
-                  </span>
-                  <h3 className="text-base font-medium">{title}</h3>
+        <section className="grid gap-6 py-16 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+          <div>
+            <SectionHeader
+              eyebrow="Arquitetura"
+              title="Ferramentas externas"
+              accent="e responsabilidades"
+              subtitle="A implementacao usa ferramentas de mercado para entregar velocidade sem criar um sistema pesado desde o primeiro dia."
+            />
+            <p className="mt-6 rounded-2xl border border-warn/30 bg-warn/10 p-4 text-sm leading-6 text-warn">
+              Custos externos sob responsabilidade da Loulouxshoes: planos do Airtable, Make e
+              Z-API. Caso algum plano precise de upgrade por limite de automacoes, registros ou
+              envios, isso sera validado antes.
+            </p>
+          </div>
+
+          <div className="grid gap-4">
+            {systems.map((system) => (
+              <article
+                key={system.name}
+                data-reveal
+                className="flex items-center gap-4 rounded-2xl border border-border/70 bg-card/55 p-5"
+              >
+                <SystemLogo name={system.name} className={system.className} />
+                <div>
+                  <h3 className="font-display text-2xl font-semibold">{system.name}</h3>
+                  <p className="mt-1 text-sm leading-6 text-muted-foreground">{system.role}</p>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
-              </div>
+              </article>
             ))}
           </div>
         </section>
 
-        {/* 9. Cronograma */}
+        <section className="relative my-6 overflow-hidden rounded-[2rem] border border-border/70 bg-section px-6 py-16 sm:px-8 lg:px-10">
+          <SectionHeader eyebrow="Diferenciais" title="Por que esse fluxo" accent="vale a pena" />
+          <div className="mt-10 grid gap-5 lg:grid-cols-3">
+            {highlights.map(({ icon: Icon, title, text }) => (
+              <article
+                key={title}
+                className="rounded-2xl border border-border/70 bg-background/45 p-6"
+              >
+                <span className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <h3 className="text-lg font-semibold">{title}</h3>
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">{text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="grid gap-10 py-16 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+          <div>
+            <SectionHeader eyebrow="Executor" title="AethiX Digital" accent="por Luiz Messias" />
+            <p className="mt-6 text-sm leading-7 text-muted-foreground sm:text-base">
+              Desenvolvimento full stack e arquitetura de automacoes para transformar processos
+              comerciais e operacionais em sistemas simples de usar. Neste projeto, a entrega
+              central e conectar dados, pessoas e comunicacao sem travar a rotina da producao.
+            </p>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-[0.75fr_1fr]">
+            <img
+              src={luizPhotoUrl}
+              alt="Luiz Messias"
+              className="aspect-[4/5] w-full rounded-[1.5rem] border border-border/70 object-cover"
+            />
+            <div className="grid gap-4">
+              {deliverables.map((item) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card/50 p-4"
+                >
+                  <Check className="h-4 w-4 shrink-0 text-accent" />
+                  <span className="text-sm font-medium">{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="py-16">
-          <SectionHeader title="Cronograma" accent="do projeto" subtitle="Contrato, desenvolvimento e go-live." />
-          <div className="mt-10 grid gap-4">
-            {cronograma.map((c) => (
-              <div key={c.n} className="rounded-2xl border border-border/60 bg-card/60 p-5">
-                <div className="flex items-start gap-4">
-                  <span className="shrink-0 font-display text-2xl font-semibold text-foreground/30">
-                    {c.n}
-                  </span>
-                  <div>
-                    <h3 className="text-base font-medium">{c.t}</h3>
-                    <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{c.d}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 10. Investimento */}
-        <section className="relative py-16 bg-section rounded-3xl px-6 my-6 border border-border/60 overflow-hidden">
-          <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-            <span>Onde você está investindo</span>
-            <span className="text-foreground">Entrega: 15 dias</span>
-          </div>
-          <div className="h-px bg-gradient-to-r from-foreground via-foreground/30 to-transparent mt-3" />
-
-          <ul className="mt-6 divide-y divide-border/60">
-            {investimento.map((i) => (
-              <li key={i.title} className="py-4">
-                <div className="flex items-start gap-3">
-                  <Check className="h-4 w-4 mt-1 shrink-0" />
-                  <div>
-                    <h3 className="text-base font-medium">{i.title}</h3>
-                    <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{i.desc}</p>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-8 rounded-2xl border border-foreground/30 bg-background/60 p-6 backdrop-blur shadow-glow">
-            <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">Investimento total</p>
-            <p className="mt-2 font-display text-5xl font-semibold tracking-tight text-shine">
-              R$ 3.800<span className="text-2xl text-muted-foreground">,00</span>
-            </p>
-            <div className="mt-5 space-y-2 text-sm">
-              <p className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-foreground" />
-                À vista no Pix — <span className="font-medium">R$ 3.800,00</span>
-              </p>
-              <p className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-foreground" />
-                6× sem juros no cartão — <span className="font-medium">R$ 633,33/mês</span>
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* 11. CTA */}
-        <section className="relative py-24 bg-hero rounded-3xl px-6 my-6 border border-border/60 overflow-hidden noise">
-          <div className="absolute inset-0 grid-bg opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)]" />
-          <img
-            src={aethixLogo.url}
-            alt="AethiX Digital"
-            className="absolute top-6 right-6 h-8 w-auto invert opacity-70"
+          <SectionHeader
+            eyebrow="Cronograma"
+            title="Entrega em"
+            accent="12 dias corridos"
+            subtitle="Prazo contado a partir de contrato, pagamento inicial e liberacao dos acessos necessarios."
           />
-          <h2 className="relative font-display text-5xl sm:text-6xl font-semibold leading-[0.95] tracking-tight">
-            Vamos
-            <br />
-            <span className="text-shine">construir juntos?</span>
-          </h2>
+          <div className="mt-10 grid gap-4">
+            {timeline.map(([number, title, description]) => (
+              <article
+                key={number}
+                className="grid gap-4 rounded-2xl border border-border/70 bg-card/50 p-5 sm:grid-cols-[5rem_1fr] sm:items-center"
+              >
+                <span className="font-display text-4xl font-semibold text-foreground/25">
+                  {number}
+                </span>
+                <div>
+                  <h3 className="text-lg font-semibold">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{description}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
 
-          <div className="relative mt-12 grid grid-cols-2 gap-6 text-sm">
-            <div className="border-l-2 border-foreground/30 pl-4">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Validade</p>
-              <p className="mt-2 font-medium">5 dias corridos</p>
+        <section
+          data-reveal
+          className="relative my-6 overflow-hidden rounded-[2rem] border border-accent/35 bg-section px-6 py-16 sm:px-8 lg:px-10"
+        >
+          <div className="absolute inset-0 grid-bg opacity-30" />
+          <div className="relative grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+            <div>
+              <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+                Bonus gratuito
+              </p>
+              <h2 className="font-display text-4xl font-semibold leading-tight sm:text-5xl">
+                Mini sistema Louloux Flow incluso sem custo.
+              </h2>
+              <p className="mt-5 text-sm leading-7 text-muted-foreground sm:text-base">
+                Alem do Airtable e das automacoes, sera entregue uma camada propria simples, com a
+                identidade visual da Louloux, para a fabrica operar leitura, impressao, status,
+                pedidos parciais e comunicacoes sem depender de telas complexas.
+              </p>
             </div>
-            <div className="border-l-2 border-foreground/30 pl-4">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Entrega</p>
-              <p className="mt-2 font-medium">15 dias corridos</p>
+            <div className="rounded-[1.6rem] border border-border/70 bg-background/60 p-5 shadow-elev backdrop-blur">
+              <div className="mb-5 flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.24em] text-muted-foreground">
+                    Louloux Flow
+                  </p>
+                  <h3 className="mt-2 font-display text-2xl font-semibold">Painel de fabrica</h3>
+                </div>
+                <img
+                  src={loulouLogoUrl}
+                  alt="Loulouxshoes"
+                  className="h-14 w-14 rounded-2xl object-cover"
+                />
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {[
+                  "Leitura por etapa",
+                  "Impressao de ficha",
+                  "Etiqueta termica",
+                  "Pedidos parciais",
+                  "NF via Tiny",
+                  "WhatsApp/e-mail",
+                ].map((feature) => (
+                  <div key={feature} className="rounded-2xl border border-border/70 bg-card/60 p-4">
+                    <Check className="mb-3 h-4 w-4 text-accent" />
+                    <p className="text-sm font-semibold">{feature}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
+        </section>
 
-          <div className="relative mt-10 flex flex-col gap-3">
-            <a
-              href={whatsapp}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full bg-foreground text-background font-medium px-6 py-4 text-center hover:opacity-90 transition"
-            >
-              Fechar pelo WhatsApp
-            </a>
-            <a
-              href="mailto:contato@aethix.digital"
-              className="rounded-full border border-border bg-background/50 backdrop-blur px-6 py-4 text-center font-medium flex items-center justify-center gap-2 hover:bg-background transition"
-            >
-              <Mail className="h-4 w-4" /> contato@aethix.digital
-            </a>
+        <section
+          id="investimento"
+          className="relative my-6 overflow-hidden rounded-[2rem] border border-border/70 bg-hero px-6 py-16 shadow-elev sm:px-8 lg:px-10"
+        >
+          <div className="absolute inset-0 grid-bg opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_72%)]" />
+          <div className="relative grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-end">
+            <div>
+              <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent/25 bg-accent/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+                <Clock3 className="h-4 w-4" />
+                Investimento
+              </p>
+              <h2 className="font-display text-5xl font-semibold leading-none sm:text-7xl">
+                R$ 3.800<span className="text-3xl text-muted-foreground">,00</span>
+              </h2>
+              <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground sm:text-base">
+                Inclui estruturacao da base, integracoes, QR/Barcode, automacoes Make, disparos
+                Z-API, impressoes, controle de parciais, apoio Tiny/NF, documentacao, treinamento e
+                o mini sistema bonus Louloux Flow.
+              </p>
+            </div>
+
+            <div className="rounded-[1.5rem] border border-border/70 bg-background/60 p-6 backdrop-blur">
+              <div className="space-y-4">
+                <p className="flex items-center gap-3 text-sm">
+                  <Check className="h-4 w-4 text-accent" />A vista no Pix:{" "}
+                  <strong>R$ 3.800,00</strong>
+                </p>
+                <p className="flex items-center gap-3 text-sm">
+                  <Check className="h-4 w-4 text-accent" />
+                  6x sem juros no cartao: <strong>R$ 633,33/mes</strong>
+                </p>
+                <p className="flex items-center gap-3 text-sm">
+                  <Check className="h-4 w-4 text-accent" />
+                  Validade comercial: <strong>5 dias corridos</strong>
+                </p>
+                <p className="flex items-center gap-3 text-sm">
+                  <Check className="h-4 w-4 text-accent" />
+                  Entrega estimada: <strong>12 dias corridos</strong>
+                </p>
+              </div>
+              <a
+                href={whatsapp}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-7 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground transition duration-200 hover:-translate-y-0.5 hover:bg-primary/90"
+              >
+                Fechar pelo WhatsApp <MessageCircle className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16">
+          <div className="rounded-[2rem] border border-border/70 bg-card/55 p-6 sm:p-8 lg:p-10">
+            <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+              <div>
+                <h2 className="font-display text-4xl font-semibold leading-tight sm:text-5xl">
+                  Pronto para tirar a producao do manual.
+                </h2>
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+                  Apos a aprovacao, o proximo passo e liberar os acessos de Airtable, Tiny ERP, Make
+                  e Z-API para iniciar o mapeamento final e a construcao.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+                <a
+                  href={whatsapp}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-12 items-center justify-center rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground transition duration-200 hover:bg-primary/90"
+                >
+                  Aprovar proposta
+                </a>
+                <a
+                  href="mailto:contato@aethix.digital"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-border px-6 text-sm font-semibold transition duration-200 hover:bg-background"
+                >
+                  <Mail className="h-4 w-4" /> contato@aethix.digital
+                </a>
+              </div>
+            </div>
           </div>
         </section>
 
         <footer className="py-10 text-center text-xs text-muted-foreground">
-          © 2026 AethiX Digital · Proposta exclusiva para Loulouxshoes
+          2026 AethiX Digital. Proposta exclusiva para Loulouxshoes.
         </footer>
       </div>
     </main>

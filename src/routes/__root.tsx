@@ -77,20 +77,42 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Loulouxshoes Proposal Hub is a mobile-first commercial proposal website for Loulouxshoes." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Loulouxshoes Proposal Hub is a mobile-first commercial proposal website for Loulouxshoes." },
+      { title: "Proposta Comercial - Loulouxshoes | AethiX Digital" },
+      {
+        name: "description",
+        content:
+          "Proposta para automacao do fluxo produtivo da Loulouxshoes com Airtable, Tiny ERP, Make, Z-API e QR Code.",
+      },
+      { name: "author", content: "AethiX Digital" },
+      { property: "og:title", content: "Proposta Comercial - Loulouxshoes" },
+      {
+        property: "og:description",
+        content:
+          "Automacao operacional para pedidos, producao, baixa por QR Code e avisos automaticos no WhatsApp.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Lovable App" },
-      { name: "twitter:description", content: "Loulouxshoes Proposal Hub is a mobile-first commercial proposal website for Loulouxshoes." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/83530036-d2ec-4186-9dd3-3b7b7940751d/id-preview-052dd56e--e83e48e7-7f73-4aba-9126-ee54ccd507b8.lovable.app-1780324563777.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/83530036-d2ec-4186-9dd3-3b7b7940751d/id-preview-052dd56e--e83e48e7-7f73-4aba-9126-ee54ccd507b8.lovable.app-1780324563777.png" },
+      { name: "twitter:title", content: "Proposta Comercial - Loulouxshoes" },
+      {
+        name: "twitter:description",
+        content: "Fluxo produtivo automatizado com Airtable, Make, Z-API e QR Code.",
+      },
+      {
+        property: "og:image",
+        content: "/assets/louloux-logo.jpeg",
+      },
+      {
+        name: "twitter:image",
+        content: "/assets/louloux-logo.jpeg",
+      },
     ],
     links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap",
+      },
       {
         rel: "stylesheet",
         href: appCss,
@@ -105,7 +127,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <HeadContent />
       </head>
