@@ -258,14 +258,15 @@ function Proposta() {
           <div>
             <SectionHeader title="Por trás dos" accent="projetos" />
             <p className="mt-6 text-sm text-muted-foreground leading-relaxed">
-              Sou Luiz Messias, fundador da AethiX Digital. Trabalho com design de produto e
-              desenvolvimento web focado em UI/UX, atendendo marcas que valorizam exclusividade,
-              performance e identidade visual de verdade.
+              Sou Luiz Messias, fundador da AethiX Digital. Atuo na construção de fluxos
+              automatizados com Airtable, Make e Z-API, atendendo marcas que querem ganhar tempo,
+              organização e escala sem perder o toque humano no processo.
             </p>
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-              Cada entrega é construída com atenção a detalhes técnicos, tipografia, hierarquia e
-              microinterações — princípios que definem uma boa interface.
+              Cada entrega é construída com atenção a regras de negócio, observabilidade do fluxo e
+              experiência do cliente final — princípios que definem uma boa automação.
             </p>
+
           </div>
           <div className="relative">
             <img
