@@ -13,118 +13,133 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Proposta comercial AethiX Digital para Loulouxshoes. Landing Page com foco em UI/UX, design responsivo e SEO técnico.",
+          "Proposta comercial AethiX Digital para Loulouxshoes. Automação de fluxo produtivo com Airtable, Make e Z-API.",
       },
       { property: "og:title", content: "Proposta Comercial — Loulouxshoes" },
       {
         property: "og:description",
-        content: "Proposta personalizada AethiX Digital para Cristiano Bronzatto / Loulouxshoes.",
+        content: "Automação completa do fluxo de produção Loulouxshoes — Airtable + Make + Z-API.",
       },
       { property: "og:type", content: "website" },
     ],
   }),
+
   component: Proposta,
 });
 
 const escopo = [
   {
-    tag: "Página Inicial",
+    tag: "Integração inicial",
     items: [
-      "Seção herói",
-      "Breve apresentação",
-      "Benefícios",
-      "Diferenciais",
-      "Clientes/Projetos/Serviços",
-      "FAQ",
-      "Prova social (depoimentos)",
-      "CTA final + formulário",
+      "Conexão Tiny ERP → Airtable",
+      "Importação automática do pedido na Baggi",
+      "Sincronização dos campos (cliente, produto, prioridade, observações, e-mail, WhatsApp, barcode, foto e ficha técnica/mockup)",
+      "Entrada na base 'Aprovados' com status inicial",
     ],
   },
   {
-    tag: "Página Sobre",
-    items: ["História da empresa", "Missão, visão e valores", "Parceiros & fornecedores"],
+    tag: "Etapas de produção",
+    items: [
+      "Aprovados → Programação (movimentação manual ou por regra)",
+      "Programação → Corte automático",
+      "Corte → Artesão (costura e montagem)",
+      "Baixa do artesão via leitura de barcode (LOU-XXXX) ou botão 'Concluir etapa' no Airtable",
+      "Artesão → Costura (mesma lógica de baixa)",
+      "Encerramento e arquivamento do pedido",
+    ],
   },
   {
-    tag: "Página de Serviços",
-    items: ["Seção herói com Head de entrada", "Todos os serviços"],
+    tag: "Automações Make + Z-API",
+    items: [
+      "Gatilho 1 — fim da etapa do artesão: dispara mensagem ao cliente via Z-API com foto do artesão informando avanço para costura",
+      "Gatilho 2 — fim da etapa de costura: mesmo fluxo, com mensagem personalizada",
+      "Variáveis dinâmicas: nome do cliente, número do pedido, produto e foto do responsável",
+      "Logs de envio gravados de volta no Airtable para auditoria",
+    ],
   },
   {
-    tag: "Página Contato",
-    items: ["CTA + Formulário", "Redes sociais", "Localização (caso deseje)"],
+    tag: "Entregáveis finais",
+    items: [
+      "Base Airtable estruturada e documentada",
+      "Cenários Make publicados e versionados",
+      "Templates de mensagem Z-API aprovados",
+      "Treinamento da equipe (1 sessão) + manual de operação",
+    ],
   },
 ];
 
 const diferenciais = [
   {
-    title: "Foco em UI/UX",
-    text: "Cada projeto é desenvolvido com base em princípios de experiência do usuário e interface estratégica. Não se trata apenas de estética, mas de organização visual, hierarquia de informação e tomada de decisão, garantindo clareza, profissionalismo e melhor desempenho na conversão.",
+    title: "Fluxo desenhado para a operação real",
+    text: "Cada etapa é mapeada com base no processo atual da Loulouxshoes — do pedido na Baggi até a entrega — garantindo que a automação acompanhe a rotina do time, e não o contrário.",
   },
   {
-    title: "Framer e servidores AWS",
-    text: "Os sites são desenvolvidos no Framer, plataforma moderna utilizada internacionalmente, com hospedagem em servidores AWS, referência mundial em infraestrutura e estabilidade. Isso garante alta performance, segurança, velocidade de carregamento e excelente experiência em qualquer dispositivo.",
+    title: "Stack enxuta e escalável",
+    text: "Airtable como fonte da verdade, Make como orquestrador e Z-API para comunicação no WhatsApp. Três ferramentas confiáveis, baixo custo de manutenção e fácil expansão para novas etapas no futuro.",
   },
   {
-    title: "Exclusividade",
-    text: "O Framer ainda é uma ferramenta pouco explorada no Brasil, dominada por uma parcela reduzida de profissionais. Isso permite entregar projetos mais modernos, flexíveis e tecnologicamente avançados, fugindo de soluções genéricas e garantindo um diferencial competitivo real no mercado.",
+    title: "Experiência do cliente como prioridade",
+    text: "As notificações automáticas com foto do artesão geram conexão emocional, transparência e diferenciação de marca — transformando o processo produtivo em parte da experiência de compra.",
   },
 ];
 
 const cronograma = [
   {
     n: "1",
-    t: "Contrato e pagamento inicial (50%)",
-    d: "Início formal do projeto mediante assinatura do contrato e pagamento da primeira parcela, correspondente a 50% do valor total acordado.",
+    t: "Contrato e pagamento inicial",
+    d: "Assinatura do contrato e confirmação do pagamento (à vista no Pix ou 1ª parcela do cartão) para início formal do projeto.",
   },
   {
     n: "2",
-    t: "Briefing e coleta de informações",
-    d: "Etapa de alinhamento estratégico, onde são coletadas todas as informações necessárias, materiais, referências e direcionamentos para o desenvolvimento do projeto.",
+    t: "Mapeamento e levantamento técnico",
+    d: "Reuniões para mapear o fluxo atual da produção, acessos ao Tiny ERP, Airtable, Make e Z-API, definição dos campos e regras de negócio.",
   },
   {
     n: "3",
-    t: "Desenvolvimento da Copy",
-    d: "Com base no briefing, é estruturado o conteúdo estratégico do site (copywriting), incluindo organização das seções e narrativa. A copy é enviada para aprovação antes do início do desenvolvimento visual.",
+    t: "Estruturação da base Airtable",
+    d: "Criação das tabelas, views por etapa (Aprovados, Programação, Corte, Artesão, Costura), campos sincronizados com o Tiny e anexo automático do mockup do produto.",
   },
   {
     n: "4",
-    t: "Desenvolvimento do Projeto",
-    d: "Após a aprovação da copy, inicia-se o desenvolvimento do layout e da estrutura do site, aplicando os conceitos de UI/UX, identidade visual e arquitetura definidos previamente.",
+    t: "Construção das automações no Make",
+    d: "Cenários para movimentação entre etapas, baixa por barcode, controle de responsáveis e disparo das mensagens via Z-API.",
   },
   {
     n: "5",
-    t: "Aprovação Final do Projeto",
-    d: "O projeto é apresentado para validação. Todas as solicitações de ajustes devem ser realizadas nesta etapa. Após a aprovação final, alterações adicionais poderão gerar custos extras.",
+    t: "Testes e validação com a equipe",
+    d: "Rodadas de testes simulando pedidos reais, ajustes finos nos gatilhos e validação das mensagens enviadas ao cliente.",
   },
   {
     n: "6",
-    t: "Pagamento Final (50%)",
-    d: "Após a aprovação do projeto, é realizado o pagamento da parcela final para liberação da etapa de publicação.",
+    t: "Pagamento final e go-live",
+    d: "Após validação, é realizada a liberação dos cenários em produção e a entrega oficial do fluxo automatizado.",
   },
   {
     n: "7",
-    t: "Publicação do projeto",
-    d: "Com o pagamento final confirmado, é realizado o deploy do projeto, incluindo vinculação de domínio e configuração de hospedagem. A publicação ocorre somente após a confirmação do pagamento final (50%), uma vez que domínio e hospedagem dependem diretamente do pagamento por parte do contratante.",
+    t: "Treinamento e suporte inicial",
+    d: "Sessão de treinamento da equipe + manual de operação + 15 dias de suporte para ajustes pós-implantação.",
   },
 ];
 
 const investimento = [
   {
-    title: "Landing Page",
-    desc: "Landing Page completa, do design à publicação e conteúdo completo, estrutura conforme escopo da proposta.",
+    title: "Integração Tiny ERP → Airtable",
+    desc: "Importação automática dos pedidos aprovados na Baggi com todos os campos relevantes e anexo do mockup do produto.",
   },
   {
-    title: "Serviços de UX/UI Avançados",
-    desc: "Micro-animações, navegação intuitiva, interações e padrões de interface que garantem uma experiência fluida e agradável para o usuário.",
+    title: "Estruturação completa do Airtable",
+    desc: "Tabelas, views por etapa, automações nativas, controle de responsáveis e leitura de barcode (LOU-XXXX) para baixa de produção.",
   },
   {
-    title: "Design Responsivo",
-    desc: "Adaptação perfeita para todos os dispositivos: desktop, tablet e mobile, sem comprometer funcionalidade.",
+    title: "Cenários Make + Z-API",
+    desc: "Orquestração de todas as etapas e disparo automático de mensagens ao cliente via WhatsApp com foto do artesão responsável.",
   },
   {
-    title: "SEO Técnico",
-    desc: "Estrutura do site, hierarquia de conteúdo, headings, meta tags e URLs otimizadas para aumentar a visibilidade no Google.",
+    title: "Treinamento, manual e suporte inicial",
+    desc: "Capacitação da equipe, documentação do fluxo e 15 dias de suporte técnico após o go-live.",
   },
 ];
+
 
 function Proposta() {
   const whatsapp =
@@ -207,46 +222,51 @@ function Proposta() {
         {/* 3. Introdução */}
         <section className="relative py-14 bg-section rounded-3xl px-6 my-6 border border-border/60 overflow-hidden">
           <SectionHeader title="Introdução" accent="e objeto da proposta" />
-          <div className="mt-8 flex items-center gap-3">
+          <div className="mt-8 flex items-center gap-3 flex-wrap">
             <span className="text-sm">Objeto da proposta:</span>
             <span className="rounded-full bg-accent text-accent-foreground text-sm font-medium px-4 py-1.5 shadow-glow">
-              Landing Page
+              Automação de Fluxo Produtivo
             </span>
           </div>
           <p className="mt-8 text-sm text-muted-foreground leading-relaxed">
-            A solução proposta para a Loulouxshoes é o desenvolvimento de uma Landing Page de alta
-            conversão, com identidade visual alinhada à marca, foco em performance e experiência
-            mobile-first. O projeto contempla copywriting estratégico, design exclusivo, animações
-            sutis e hospedagem profissional.
+            A solução proposta para a Loulouxshoes é o desenvolvimento de um fluxo produtivo
+            totalmente automatizado dentro do Airtable, integrando os pedidos vindos da Baggi /
+            Tiny ERP e orquestrando cada etapa — Aprovados, Programação, Corte, Artesão e Costura —
+            até a comunicação final com o cliente via Z-API. O objetivo é reduzir trabalho manual,
+            dar previsibilidade à operação e transformar o processo em parte da experiência da
+            marca.
           </p>
+
         </section>
 
         {/* 4. Sobre Luiz */}
         <section className="py-14">
           <h2 className="text-3xl sm:text-4xl font-semibold leading-tight tracking-tight">
-            Product Designer focado em <span className="text-accent">UI/UX</span>,{" "}
-            <span className="text-muted-foreground">não Web Designer.</span>
+            Especialista em <span className="text-accent">automações</span> e fluxos produtivos,{" "}
+            <span className="text-muted-foreground">não apenas integrador.</span>
           </h2>
           <p className="mt-8 text-sm text-muted-foreground leading-relaxed">
-            Desenvolvo interfaces digitais pensadas para conversão e clareza. Cada projeto combina
-            estética, estratégia e tecnologia para entregar experiências que fortalecem marcas e
-            geram resultados reais.
+            Desenho fluxos operacionais que conectam ferramentas, eliminam retrabalho e dão
+            previsibilidade ao negócio. Cada automação é construída pensando em escala, clareza
+            para o time e em transformar processo em experiência de marca.
           </p>
         </section>
+
 
         {/* 5. Por trás dos projetos */}
         <section className="py-14 grid sm:grid-cols-2 gap-8 items-center">
           <div>
             <SectionHeader title="Por trás dos" accent="projetos" />
             <p className="mt-6 text-sm text-muted-foreground leading-relaxed">
-              Sou Luiz Messias, fundador da AethiX Digital. Trabalho com design de produto e
-              desenvolvimento web focado em UI/UX, atendendo marcas que valorizam exclusividade,
-              performance e identidade visual de verdade.
+              Sou Luiz Messias, fundador da AethiX Digital. Atuo na construção de fluxos
+              automatizados com Airtable, Make e Z-API, atendendo marcas que querem ganhar tempo,
+              organização e escala sem perder o toque humano no processo.
             </p>
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-              Cada entrega é construída com atenção a detalhes técnicos, tipografia, hierarquia e
-              microinterações — princípios que definem uma boa interface.
+              Cada entrega é construída com atenção a regras de negócio, observabilidade do fluxo e
+              experiência do cliente final — princípios que definem uma boa automação.
             </p>
+
           </div>
           <div className="relative">
             <img
@@ -290,7 +310,7 @@ function Proposta() {
             subtitle="O escopo deste projeto foi estruturado com base nas informações levantadas até o momento. Ajustes ou ampliações poderão ser realizados conforme necessidade, podendo impactar prazos e valores apresentados nesta proposta."
           />
           <p className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
-            Sugestão de estrutura <ArrowRight className="h-4 w-4 text-accent" />
+            Sugestão de fluxo <ArrowRight className="h-4 w-4 text-accent" />
           </p>
           <div className="mt-8 grid gap-4">
             {escopo.map((e) => (
@@ -299,7 +319,7 @@ function Proposta() {
                 className="rounded-2xl border border-border/60 bg-card p-5"
               >
                 <div className="flex items-center justify-between gap-3 mb-4">
-                  <span className="text-sm font-medium text-muted-foreground">Seções</span>
+                  <span className="text-sm font-medium text-muted-foreground">Etapa</span>
                   <span className="rounded-full bg-accent text-accent-foreground text-xs font-medium px-3 py-1">
                     {e.tag}
                   </span>
@@ -314,9 +334,10 @@ function Proposta() {
               </article>
             ))}
             <p className="text-xs text-muted-foreground border border-border/60 rounded-xl px-4 py-3">
-              O projeto inclui rodapé e barra de navegação.
+              Custos externos sob responsabilidade da Loulouxshoes: assinaturas Airtable, Make e Z-API.
             </p>
           </div>
+
         </section>
 
         {/* 9. Diferenciais */}
