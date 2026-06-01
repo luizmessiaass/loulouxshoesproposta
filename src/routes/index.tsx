@@ -245,10 +245,36 @@ function AethixLogo({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function SystemLogo({ name }: { name: string }) {
+function SystemLogo({ name, className }: { name: string; className?: string }) {
+  const logos: Record<string, string> = {
+    Baggi: "https://bagy.com.br/wp-content/uploads/2023/10/Logo_Bagy_Branca.svg",
+    "Tiny ERP": "https://tiny.com.br/assets/images/logo/logo-tiny-branca.svg",
+    Airtable: "https://upload.wikimedia.org/wikipedia/commons/4/4b/Airtable_Logo.svg",
+    Make: "https://upload.wikimedia.org/wikipedia/commons/6/69/Make_Logo.svg",
+    "Z-API": "/assets/z-api.svg",
+  };
+
+  const logoUrl = logos[name];
+
+  if (logoUrl) {
+    return (
+      <span
+        className={`flex h-14 w-32 shrink-0 items-center justify-center rounded-xl border border-border/80 bg-background/50 px-4 py-2 backdrop-blur shadow-sm ${className || ""}`}
+      >
+        <img
+          src={logoUrl}
+          alt={name}
+          className={`max-h-full max-w-full object-contain ${
+            name === "Airtable" || name === "Make" || name === "Z-API" ? "brightness-0 invert opacity-90" : "opacity-90"
+          }`}
+        />
+      </span>
+    );
+  }
+
   return (
     <span
-      className="flex min-h-12 min-w-28 shrink-0 items-center justify-center rounded-xl border border-border bg-white px-4 text-sm font-black uppercase text-black"
+      className={`flex h-14 w-32 shrink-0 items-center justify-center rounded-xl border border-border/80 bg-background/50 px-4 text-xs font-black uppercase tracking-wider text-foreground/80 backdrop-blur shadow-sm ${className || ""}`}
       aria-hidden="true"
     >
       {name}
@@ -312,6 +338,12 @@ function Proposta() {
       ref={rootRef}
       className="relative min-h-screen overflow-x-hidden bg-background text-foreground"
     >
+      {/* Background ambient light orbs - fixed, full page */}
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <div className="absolute -top-40 -left-40 h-[600px] w-[600px] rounded-full bg-[radial-gradient(ellipse_at_center,_oklch(0.25_0.04_250_/_0.35)_0%,_transparent_70%)] blur-3xl" />
+        <div className="absolute top-1/3 -right-48 h-[500px] w-[500px] rounded-full bg-[radial-gradient(ellipse_at_center,_oklch(0.2_0.028_220_/_0.25)_0%,_transparent_70%)] blur-3xl" />
+        <div className="absolute -bottom-32 left-1/3 h-[400px] w-[400px] rounded-full bg-[radial-gradient(ellipse_at_center,_oklch(0.18_0.022_260_/_0.3)_0%,_transparent_70%)] blur-3xl" />
+      </div>
       <nav className="sticky top-0 z-50 border-b border-border/70 bg-background/75 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
           <a
@@ -337,10 +369,14 @@ function Proposta() {
         </div>
       </nav>
 
-      <div id="topo" className="mx-auto max-w-6xl px-5">
-        <section className="relative my-6 min-h-[calc(100svh-6rem)] overflow-hidden rounded-[2rem] border border-border/70 bg-hero px-5 py-8 shadow-elev sm:px-8 lg:px-12">
-          <div className="absolute inset-0 grid-bg opacity-70 [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_76%)]" />
-          <div className="scan-orbit pointer-events-none absolute -right-28 -top-28 h-80 w-80 rounded-full border border-primary/20" />
+      <div id="topo" className="relative z-10 mx-auto max-w-6xl px-5">
+        <section className="relative z-10 my-6 min-h-[calc(100svh-6rem)] overflow-hidden rounded-[2rem] border border-border/60 bg-hero px-5 py-8 shadow-elev sm:px-8 lg:px-12">
+          <div className="absolute inset-0 grid-bg opacity-80 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_80%)]" />
+          {/* Hero glow orb top-left */}
+          <div aria-hidden="true" className="pointer-events-none absolute -top-32 -left-32 h-[480px] w-[480px] rounded-full bg-[radial-gradient(ellipse_at_center,_oklch(0.32_0.05_255_/_0.45)_0%,_transparent_70%)] blur-3xl" />
+          {/* Hero glow orb bottom-right */}
+          <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 -right-24 h-[320px] w-[320px] rounded-full bg-[radial-gradient(ellipse_at_center,_oklch(0.22_0.03_230_/_0.35)_0%,_transparent_70%)] blur-2xl" />
+          <div className="scan-orbit pointer-events-none absolute -right-28 -top-28 h-80 w-80 rounded-full border border-primary/15" />
 
           <div className="relative grid min-h-[calc(100svh-10rem)] items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
             <div className="animate-fade-up">
@@ -351,8 +387,8 @@ function Proposta() {
                   className="h-14 w-14 rounded-2xl object-cover ring-1 ring-primary/20"
                 />
                 <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                <span className="inline-flex min-h-14 items-center rounded-2xl border border-border/70 bg-white px-4 py-2">
-                  <img src={aethixLogoUrl} alt="AethiX Digital" className="h-10 w-auto sm:h-12" />
+                <span className="inline-flex min-h-14 items-center rounded-2xl border border-border/60 bg-card/80 px-4 py-2 backdrop-blur-sm">
+                  <img src={aethixLogoUrl} alt="AethiX Digital" className="h-10 w-auto invert sm:h-12" />
                 </span>
               </div>
 
