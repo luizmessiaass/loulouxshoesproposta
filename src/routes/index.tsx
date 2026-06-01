@@ -310,7 +310,7 @@ function Proposta() {
             subtitle="O escopo deste projeto foi estruturado com base nas informações levantadas até o momento. Ajustes ou ampliações poderão ser realizados conforme necessidade, podendo impactar prazos e valores apresentados nesta proposta."
           />
           <p className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
-            Sugestão de estrutura <ArrowRight className="h-4 w-4 text-accent" />
+            Sugestão de fluxo <ArrowRight className="h-4 w-4 text-accent" />
           </p>
           <div className="mt-8 grid gap-4">
             {escopo.map((e) => (
@@ -319,7 +319,7 @@ function Proposta() {
                 className="rounded-2xl border border-border/60 bg-card p-5"
               >
                 <div className="flex items-center justify-between gap-3 mb-4">
-                  <span className="text-sm font-medium text-muted-foreground">Seções</span>
+                  <span className="text-sm font-medium text-muted-foreground">Etapa</span>
                   <span className="rounded-full bg-accent text-accent-foreground text-xs font-medium px-3 py-1">
                     {e.tag}
                   </span>
@@ -334,9 +334,10 @@ function Proposta() {
               </article>
             ))}
             <p className="text-xs text-muted-foreground border border-border/60 rounded-xl px-4 py-3">
-              O projeto inclui rodapé e barra de navegação.
+              Custos externos sob responsabilidade da Loulouxshoes: assinaturas Airtable, Make e Z-API.
             </p>
           </div>
+
         </section>
 
         {/* 9. Diferenciais */}
