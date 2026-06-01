@@ -13,16 +13,17 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Proposta comercial AethiX Digital para Loulouxshoes. Landing Page com foco em UI/UX, design responsivo e SEO técnico.",
+          "Proposta comercial AethiX Digital para Loulouxshoes. Automação de fluxo produtivo com Airtable, Make e Z-API.",
       },
       { property: "og:title", content: "Proposta Comercial — Loulouxshoes" },
       {
         property: "og:description",
-        content: "Proposta personalizada AethiX Digital para Cristiano Bronzatto / Loulouxshoes.",
+        content: "Automação completa do fluxo de produção Loulouxshoes — Airtable + Make + Z-API.",
       },
       { property: "og:type", content: "website" },
     ],
   }),
+
   component: Proposta,
 });
 
