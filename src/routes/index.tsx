@@ -1,10 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRight, Check, Mail } from "lucide-react";
-import aethixLogo from "@/assets/aethix-logo.asset.json";
+import { ArrowRight, Check, Mail, QrCode, ScanLine, Sparkles, Zap } from "lucide-react";
+import aethixLogo from "@/assets/aethix-logo-new.asset.json";
 import loulouLogo from "@/assets/loulou-logo.asset.json";
 import luizPhoto from "@/assets/luiz-photo.asset.json";
 import { SectionHeader } from "@/components/proposal/SectionHeader";
-import { CircleDecor } from "@/components/proposal/Decor";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -13,17 +12,16 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Proposta comercial AethiX Digital para Loulouxshoes. Automação de fluxo produtivo com Airtable, Make e Z-API.",
+          "Proposta AethiX Digital para Loulouxshoes: automação do fluxo produtivo com Airtable, Make, Z-API e baixa por QR Code.",
       },
       { property: "og:title", content: "Proposta Comercial — Loulouxshoes" },
       {
         property: "og:description",
-        content: "Automação completa do fluxo de produção Loulouxshoes — Airtable + Make + Z-API.",
+        content: "Automação do fluxo produtivo Loulouxshoes — Airtable + Make + Z-API + leitura QR.",
       },
       { property: "og:type", content: "website" },
     ],
   }),
-
   component: Proposta,
 });
 
@@ -31,115 +29,84 @@ const escopo = [
   {
     tag: "Integração inicial",
     items: [
-      "Conexão Tiny ERP → Airtable",
-      "Importação automática do pedido na Baggi",
-      "Sincronização dos campos (cliente, produto, prioridade, observações, e-mail, WhatsApp, barcode, foto e ficha técnica/mockup)",
-      "Entrada na base 'Aprovados' com status inicial",
+      "Conexão Tiny ERP → Airtable com importação automática dos pedidos vindos da Baggi",
+      "Sincronização dos campos: cliente, produto, prioridade, observações, e-mail, WhatsApp, barcode, foto e ficha técnica",
+      "Entrada na base 'Aprovados' com status inicial e responsável",
     ],
   },
   {
     tag: "Etapas de produção",
     items: [
-      "Aprovados → Programação (movimentação manual ou por regra)",
-      "Programação → Corte automático",
-      "Corte → Artesão (costura e montagem)",
-      "Baixa do artesão via leitura de barcode (LOU-XXXX) ou botão 'Concluir etapa' no Airtable",
-      "Artesão → Costura (mesma lógica de baixa)",
-      "Encerramento e arquivamento do pedido",
+      "Aprovados → Programação → Corte → Artesão → Costura, com regras de movimentação",
+      "Baixa de etapa por leitura de QR Code / Barcode (LOU-XXXX) diretamente pelo celular",
+      "Registro automático de quem finalizou e horário em cada etapa",
+      "Encerramento e arquivamento do pedido ao final do fluxo",
+    ],
+  },
+  {
+    tag: "Leitura QR / Barcode",
+    items: [
+      "App de leitura via câmera do celular (PWA ou Airtable mobile)",
+      "Ao apontar a câmera, a automação identifica o pedido e atualiza o status da etapa",
+      "Captura automática: artesão responsável, data e hora exata da conclusão",
+      "Validação para evitar baixas duplicadas ou fora de ordem",
     ],
   },
   {
     tag: "Automações Make + Z-API",
     items: [
-      "Gatilho 1 — fim da etapa do artesão: dispara mensagem ao cliente via Z-API com foto do artesão informando avanço para costura",
-      "Gatilho 2 — fim da etapa de costura: mesmo fluxo, com mensagem personalizada",
-      "Variáveis dinâmicas: nome do cliente, número do pedido, produto e foto do responsável",
-      "Logs de envio gravados de volta no Airtable para auditoria",
+      "Gatilho ao concluir a etapa do artesão: dispara mensagem ao cliente via Z-API com foto do responsável",
+      "Gatilho ao concluir a costura: mensagem personalizada de avanço",
+      "Variáveis dinâmicas: nome do cliente, número do pedido, produto e responsável",
+      "Logs de envio gravados no Airtable para auditoria completa",
     ],
   },
   {
-    tag: "Entregáveis finais",
+    tag: "Entregáveis",
     items: [
       "Base Airtable estruturada e documentada",
       "Cenários Make publicados e versionados",
-      "Templates de mensagem Z-API aprovados",
-      "Treinamento da equipe (1 sessão) + manual de operação",
+      "Templates Z-API aprovados",
+      "Treinamento da equipe (1 sessão) e manual de operação",
     ],
   },
 ];
 
 const diferenciais = [
   {
+    icon: Zap,
     title: "Fluxo desenhado para a operação real",
-    text: "Cada etapa é mapeada com base no processo atual da Loulouxshoes — do pedido na Baggi até a entrega — garantindo que a automação acompanhe a rotina do time, e não o contrário.",
+    text: "Cada etapa é mapeada com base no processo atual da Loulouxshoes, garantindo que a automação acompanhe a rotina do time.",
   },
   {
-    title: "Stack enxuta e escalável",
-    text: "Airtable como fonte da verdade, Make como orquestrador e Z-API para comunicação no WhatsApp. Três ferramentas confiáveis, baixo custo de manutenção e fácil expansão para novas etapas no futuro.",
+    icon: ScanLine,
+    title: "Baixa por câmera, sem fricção",
+    text: "O artesão aponta a câmera para o QR e pronto. Status, responsável e horário são registrados em segundos.",
   },
   {
-    title: "Experiência do cliente como prioridade",
-    text: "As notificações automáticas com foto do artesão geram conexão emocional, transparência e diferenciação de marca — transformando o processo produtivo em parte da experiência de compra.",
+    icon: Sparkles,
+    title: "Experiência do cliente como diferencial",
+    text: "Notificações com a foto do artesão criam conexão, transparência e tornam o processo parte da marca.",
   },
 ];
 
 const cronograma = [
-  {
-    n: "1",
-    t: "Contrato e pagamento inicial",
-    d: "Assinatura do contrato e confirmação do pagamento (à vista no Pix ou 1ª parcela do cartão) para início formal do projeto.",
-  },
-  {
-    n: "2",
-    t: "Mapeamento e levantamento técnico",
-    d: "Reuniões para mapear o fluxo atual da produção, acessos ao Tiny ERP, Airtable, Make e Z-API, definição dos campos e regras de negócio.",
-  },
-  {
-    n: "3",
-    t: "Estruturação da base Airtable",
-    d: "Criação das tabelas, views por etapa (Aprovados, Programação, Corte, Artesão, Costura), campos sincronizados com o Tiny e anexo automático do mockup do produto.",
-  },
-  {
-    n: "4",
-    t: "Construção das automações no Make",
-    d: "Cenários para movimentação entre etapas, baixa por barcode, controle de responsáveis e disparo das mensagens via Z-API.",
-  },
-  {
-    n: "5",
-    t: "Testes e validação com a equipe",
-    d: "Rodadas de testes simulando pedidos reais, ajustes finos nos gatilhos e validação das mensagens enviadas ao cliente.",
-  },
-  {
-    n: "6",
-    t: "Pagamento final e go-live",
-    d: "Após validação, é realizada a liberação dos cenários em produção e a entrega oficial do fluxo automatizado.",
-  },
-  {
-    n: "7",
-    t: "Treinamento e suporte inicial",
-    d: "Sessão de treinamento da equipe + manual de operação + 15 dias de suporte para ajustes pós-implantação.",
-  },
+  { n: "01", t: "Contrato e kick-off", d: "Assinatura, pagamento inicial e alinhamento técnico." },
+  { n: "02", t: "Mapeamento e acessos", d: "Levantamento do fluxo atual, acessos ao Tiny ERP, Airtable, Make e Z-API." },
+  { n: "03", t: "Estruturação Airtable", d: "Tabelas, views por etapa, sincronização com o Tiny e anexo de mockups." },
+  { n: "04", t: "QR / Barcode + automações", d: "Leitor por câmera, cenários Make e disparos Z-API com foto do artesão." },
+  { n: "05", t: "Testes e validação", d: "Simulação de pedidos reais e ajustes finos com a equipe." },
+  { n: "06", t: "Go-live", d: "Liberação em produção e entrega oficial do fluxo." },
+  { n: "07", t: "Treinamento e suporte", d: "Capacitação + manual + 15 dias de suporte pós-implantação." },
 ];
 
 const investimento = [
-  {
-    title: "Integração Tiny ERP → Airtable",
-    desc: "Importação automática dos pedidos aprovados na Baggi com todos os campos relevantes e anexo do mockup do produto.",
-  },
-  {
-    title: "Estruturação completa do Airtable",
-    desc: "Tabelas, views por etapa, automações nativas, controle de responsáveis e leitura de barcode (LOU-XXXX) para baixa de produção.",
-  },
-  {
-    title: "Cenários Make + Z-API",
-    desc: "Orquestração de todas as etapas e disparo automático de mensagens ao cliente via WhatsApp com foto do artesão responsável.",
-  },
-  {
-    title: "Treinamento, manual e suporte inicial",
-    desc: "Capacitação da equipe, documentação do fluxo e 15 dias de suporte técnico após o go-live.",
-  },
+  { title: "Integração Tiny ERP → Airtable", desc: "Importação automática dos pedidos com todos os campos e anexo do mockup." },
+  { title: "Estruturação completa do Airtable", desc: "Tabelas, views por etapa, automações nativas e controle de responsáveis." },
+  { title: "Baixa por QR Code / Barcode", desc: "Leitura via câmera com registro automático de responsável e horário em cada etapa." },
+  { title: "Cenários Make + Z-API", desc: "Orquestração das etapas e disparos automáticos para o cliente com foto do artesão." },
+  { title: "Treinamento, manual e suporte", desc: "Capacitação da equipe, documentação e 15 dias de suporte técnico." },
 ];
-
 
 function Proposta() {
   const whatsapp =
@@ -149,14 +116,14 @@ function Proposta() {
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
       {/* Top bar */}
-      <nav className="sticky top-0 z-50 backdrop-blur-md bg-background/70 border-b border-border/60">
+      <nav className="sticky top-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border/60">
         <div className="mx-auto flex max-w-screen-md items-center justify-between px-5 py-3">
-          <img src={aethixLogo.url} alt="AethiX Digital" className="h-7 w-auto invert" />
+          <img src={aethixLogo.url} alt="AethiX Digital" className="h-8 w-auto invert" />
           <a
             href={whatsapp}
             target="_blank"
             rel="noreferrer"
-            className="text-xs font-medium rounded-full bg-accent text-accent-foreground px-4 py-2 shadow-glow"
+            className="text-xs font-medium rounded-full bg-foreground text-background px-4 py-2 hover:opacity-90 transition"
           >
             Fechar proposta
           </a>
@@ -165,169 +132,222 @@ function Proposta() {
 
       <div className="mx-auto max-w-screen-md px-5">
         {/* 1. Capa */}
-        <section className="relative bg-hero rounded-3xl my-6 px-6 py-20 sm:py-28 overflow-hidden border border-border/60">
-          <CircleDecor className="-left-20 -bottom-20 w-[420px] h-[420px] text-foreground" />
-          <div className="relative flex flex-col items-center text-center gap-6 animate-fade-up">
+        <section className="relative bg-hero rounded-3xl my-6 px-6 py-24 sm:py-32 overflow-hidden border border-border/60 shadow-elev noise">
+          {/* grid bg */}
+          <div className="absolute inset-0 grid-bg opacity-60 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]" />
+          {/* concentric rings */}
+          <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] animate-spin-slow opacity-20">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <span
+                key={i}
+                className="absolute inset-0 rounded-full border border-foreground/30"
+                style={{ transform: `scale(${0.4 + i * 0.15})` }}
+              />
+            ))}
+          </div>
+
+          <div className="relative flex flex-col items-center text-center gap-8 animate-fade-up">
             <img
-              src={loulouLogo.url}
-              alt="Loulouxshoes"
-              className="h-28 w-28 rounded-2xl object-cover ring-1 ring-white/10"
+              src={aethixLogo.url}
+              alt="AethiX Digital"
+              className="h-12 w-auto invert opacity-90 animate-float"
             />
-            <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-              Proposta para
+
+            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-muted-foreground">
+              <span className="h-px w-8 bg-foreground/40" />
+              Proposta exclusiva
+              <span className="h-px w-8 bg-foreground/40" />
+            </div>
+
+            <h1 className="font-display text-5xl sm:text-6xl font-semibold leading-[0.95] tracking-tight">
+              <span className="text-shine">Loulouxshoes</span>
+            </h1>
+
+            <p className="max-w-sm text-sm text-muted-foreground leading-relaxed">
+              Automação do fluxo produtivo com Airtable, Make, Z-API e baixa por leitura de QR Code.
             </p>
-            <h1 className="text-3xl font-semibold tracking-tight">Loulouxshoes</h1>
+
+            <div className="flex items-center gap-3 mt-4">
+              <img
+                src={loulouLogo.url}
+                alt="Loulouxshoes"
+                className="h-14 w-14 rounded-2xl object-cover ring-1 ring-foreground/10"
+              />
+              <span className="text-2xl text-muted-foreground font-light">×</span>
+              <div className="h-14 w-14 rounded-2xl bg-foreground/5 ring-1 ring-foreground/10 flex items-center justify-center">
+                <img src={aethixLogo.url} alt="AethiX" className="h-9 w-auto invert" />
+              </div>
+            </div>
           </div>
         </section>
 
         {/* 2. Proposta Comercial */}
-        <section className="py-14 animate-fade-up">
-          <h2 className="text-5xl sm:text-6xl font-semibold leading-[0.95] tracking-tight">
+        <section className="py-16 animate-fade-up">
+          <span className="inline-block text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-4">
+            Documento 01 — 06
+          </span>
+          <h2 className="font-display text-5xl sm:text-6xl font-semibold leading-[0.95] tracking-tight">
             Proposta
             <br />
-            <span className="text-accent">Comercial</span>
+            <span className="text-muted-foreground">Comercial</span>
           </h2>
 
-          <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-6">
+          <dl className="mt-12 grid grid-cols-2 gap-x-6 gap-y-8">
             {[
               ["Responsável", "Luiz Messias"],
               ["Cliente", "Cristiano Bronzatto"],
               ["Empresa", "Loulouxshoes"],
               ["Data", "01/06/2026"],
             ].map(([k, v]) => (
-              <div key={k}>
-                <dt className="text-sm font-medium">{k}:</dt>
-                <dd className="text-sm text-muted-foreground mt-1">{v}</dd>
+              <div key={k} className="border-l-2 border-foreground/30 pl-4">
+                <dt className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{k}</dt>
+                <dd className="text-base font-medium mt-2">{v}</dd>
               </div>
             ))}
           </dl>
 
-          <div className="mt-10 space-y-4 text-sm text-muted-foreground leading-relaxed">
+          <div className="mt-12 space-y-4 text-sm text-muted-foreground leading-relaxed">
             <p>
-              Esta proposta tem como objetivo apresentar de forma clara os serviços de web design e
-              desenvolvimento web que serão prestados, bem como a solução proposta para atender às
-              necessidades do projeto. Aqui estão descritos o escopo do projeto, etapas de
-              desenvolvimento, prazos estimados, condições comerciais, formas de pagamento e demais
-              especificações técnicas relevantes.
+              Esta proposta apresenta de forma clara os serviços de automação e integração que serão prestados,
+              o escopo do projeto, prazos, condições comerciais e especificações técnicas relevantes.
             </p>
             <p>
-              Este documento tem caráter informativo e estratégico, servindo para alinhar
-              expectativas entre as partes quanto ao escopo, entregas e processo de desenvolvimento.
-              A formalização legal do serviço, bem como direitos, deveres e responsabilidades,
-              ocorre exclusivamente por meio de contrato específico, firmado entre as partes.
+              Este documento tem caráter informativo e estratégico, servindo para alinhar expectativas entre
+              as partes. A formalização legal ocorre exclusivamente por meio de contrato específico.
             </p>
           </div>
         </section>
 
         {/* 3. Introdução */}
-        <section className="relative py-14 bg-section rounded-3xl px-6 my-6 border border-border/60 overflow-hidden">
-          <SectionHeader title="Introdução" accent="e objeto da proposta" />
-          <div className="mt-8 flex items-center gap-3 flex-wrap">
-            <span className="text-sm">Objeto da proposta:</span>
-            <span className="rounded-full bg-accent text-accent-foreground text-sm font-medium px-4 py-1.5 shadow-glow">
-              Automação de Fluxo Produtivo
-            </span>
+        <section className="relative py-16 bg-section rounded-3xl px-6 my-6 border border-border/60 overflow-hidden">
+          <SectionHeader title="Introdução" accent="e objeto" />
+          <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-foreground/20 bg-foreground/5 px-5 py-2">
+            <Sparkles className="h-4 w-4" />
+            <span className="text-sm font-medium">Automação de Fluxo Produtivo</span>
           </div>
           <p className="mt-8 text-sm text-muted-foreground leading-relaxed">
-            A solução proposta para a Loulouxshoes é o desenvolvimento de um fluxo produtivo
-            totalmente automatizado dentro do Airtable, integrando os pedidos vindos da Baggi /
-            Tiny ERP e orquestrando cada etapa — Aprovados, Programação, Corte, Artesão e Costura —
-            até a comunicação final com o cliente via Z-API. O objetivo é reduzir trabalho manual,
-            dar previsibilidade à operação e transformar o processo em parte da experiência da
-            marca.
+            A solução proposta é o desenvolvimento de um fluxo produtivo totalmente automatizado dentro do
+            Airtable, integrando os pedidos vindos da Baggi e do Tiny ERP, orquestrando cada etapa do processo
+            (Aprovados, Programação, Corte, Artesão e Costura) e finalizando com comunicação automática ao
+            cliente via Z-API. O objetivo é reduzir trabalho manual, dar previsibilidade à operação e
+            transformar o processo em parte da experiência da marca.
           </p>
-
         </section>
 
-        {/* 4. Sobre Luiz */}
-        <section className="py-14">
-          <h2 className="text-3xl sm:text-4xl font-semibold leading-tight tracking-tight">
-            Especialista em <span className="text-accent">automações</span> e fluxos produtivos,{" "}
-            <span className="text-muted-foreground">não apenas integrador.</span>
+        {/* 4. Sobre */}
+        <section className="py-16">
+          <h2 className="font-display text-3xl sm:text-4xl font-semibold leading-tight tracking-tight">
+            Desenvolvedor Full Stack
+            <br />
+            <span className="text-muted-foreground">e arquiteto de automações.</span>
           </h2>
           <p className="mt-8 text-sm text-muted-foreground leading-relaxed">
-            Desenho fluxos operacionais que conectam ferramentas, eliminam retrabalho e dão
-            previsibilidade ao negócio. Cada automação é construída pensando em escala, clareza
-            para o time e em transformar processo em experiência de marca.
+            Une visão técnica e operacional para transformar processos complexos em fluxos simples, integrados
+            e escaláveis — não desenvolve sistemas isolados, estrutura operações inteiras.
           </p>
         </section>
 
-
         {/* 5. Por trás dos projetos */}
-        <section className="py-14 grid sm:grid-cols-2 gap-8 items-center">
-          <div>
-            <SectionHeader title="Por trás dos" accent="projetos" />
+        <section className="py-16 grid sm:grid-cols-2 gap-10 items-center">
+          <div className="order-2 sm:order-1">
+            <SectionHeader title="Por trás" accent="dos projetos" />
             <p className="mt-6 text-sm text-muted-foreground leading-relaxed">
-              Sou Luiz Messias, fundador da AethiX Digital. Atuo na construção de fluxos
-              automatizados com Airtable, Make e Z-API, atendendo marcas que querem ganhar tempo,
-              organização e escala sem perder o toque humano no processo.
+              Sou Luiz Henrique Messias, fundador da AethiX Digital. Atuo como Full Stack e Tech Lead,
+              construindo plataformas SaaS, dashboards, integrações e automações para operações de e-commerce
+              e marketplaces.
             </p>
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-              Cada entrega é construída com atenção a regras de negócio, observabilidade do fluxo e
-              experiência do cliente final — princípios que definem uma boa automação.
+              Trabalho com Next.js, React, TypeScript, Node, Python, Supabase, Airtable, Make e Z-API — e
+              minha experiência cobre o ciclo completo: pedidos, estoque, faturamento, logística e
+              atendimento.
             </p>
-
+            <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+              Neste projeto, a proposta vai além de entregar uma automação: é estruturar um fluxo inteligente
+              e escalável conectando Airtable, Make, Z-API e Tiny ERP para dar controle, velocidade e
+              previsibilidade à operação.
+            </p>
           </div>
-          <div className="relative">
+          <div className="relative order-1 sm:order-2">
+            <div className="absolute -inset-3 rounded-3xl bg-foreground/5 blur-xl" />
             <img
               src={luizPhoto.url}
               alt="Luiz Messias"
-              className="w-full aspect-[4/5] object-cover rounded-3xl border border-border/60"
+              className="relative w-full aspect-[4/5] object-cover rounded-3xl border border-border/60"
             />
           </div>
         </section>
 
-        {/* 6 + 7. Portfólio */}
-        <section className="relative py-14 bg-section rounded-3xl px-6 my-6 border border-border/60 overflow-hidden">
-          <SectionHeader title="Conheça meu" accent="Portfólio" />
-          <p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-            Principais projetos <ArrowRight className="h-4 w-4 text-accent" />
-          </p>
-          <div className="mt-8 grid grid-cols-2 gap-3">
-            {[
-              "from-rose-900/60 to-red-950",
-              "from-zinc-800 to-zinc-950",
-              "from-orange-900/50 to-red-950",
-              "from-neutral-800 to-neutral-950",
-              "from-red-900/60 to-zinc-950",
-              "from-zinc-900 to-black",
-            ].map((g, i) => (
-              <div
-                key={i}
-                className={`aspect-[4/5] rounded-2xl bg-gradient-to-br ${g} border border-border/60 flex items-end p-4`}
-              >
-                <span className="text-xs text-muted-foreground">Projeto {i + 1}</span>
+        {/* 6. Destaque QR */}
+        <section className="relative py-16 bg-section rounded-3xl px-6 my-6 border border-border/60 overflow-hidden">
+          <div className="grid sm:grid-cols-[1fr_auto] gap-8 items-center">
+            <div>
+              <span className="inline-block text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-3">
+                Novidade
+              </span>
+              <h2 className="font-display text-3xl sm:text-4xl font-semibold tracking-tight">
+                Baixa por <span className="text-shine">QR Code</span>
+              </h2>
+              <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+                O artesão aponta a câmera do celular para o QR/Barcode do pedido. Em segundos, a automação
+                identifica a etapa, atualiza o status e registra quem finalizou e o horário exato.
+              </p>
+              <ul className="mt-6 space-y-2 text-sm">
+                {["Sem digitação", "Registro automático de responsável", "Data e hora exatas", "Validação anti-duplicidade"].map((t) => (
+                  <li key={t} className="flex items-center gap-2">
+                    <Check className="h-4 w-4" /> {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* QR mock visual */}
+            <div className="relative mx-auto h-44 w-44 rounded-3xl border border-foreground/20 bg-background/60 p-4 overflow-hidden">
+              <div className="grid grid-cols-7 grid-rows-7 gap-[3px] h-full w-full">
+                {Array.from({ length: 49 }).map((_, i) => {
+                  const filled = [0,1,2,3,4,5,6,7,12,14,15,21,18,20,24,25,26,28,30,33,34,35,38,40,42,43,44,45,46,47,48].includes(i);
+                  return <span key={i} className={filled ? "bg-foreground rounded-[2px]" : ""} />;
+                })}
               </div>
-            ))}
+              <div className="absolute inset-x-4 top-4 bottom-4 overflow-hidden pointer-events-none">
+                <div className="h-1 w-full bg-foreground/70 shadow-[0_0_20px_2px_rgba(255,255,255,0.6)] animate-scan" />
+              </div>
+              <span className="absolute inset-0 rounded-3xl border border-foreground/30 animate-pulse-ring" />
+              <QrCode className="absolute -top-2 -right-2 h-6 w-6 text-foreground/40" />
+            </div>
           </div>
         </section>
 
-        {/* 8. Escopo */}
-        <section className="py-14">
+        {/* 7. Escopo */}
+        <section className="py-16">
           <SectionHeader
             title="Escopo"
-            accent="do Projeto"
-            subtitle="O escopo deste projeto foi estruturado com base nas informações levantadas até o momento. Ajustes ou ampliações poderão ser realizados conforme necessidade, podendo impactar prazos e valores apresentados nesta proposta."
+            accent="do projeto"
+            subtitle="O escopo foi estruturado com base nas informações levantadas até o momento. Ajustes ou ampliações poderão ser realizados conforme necessidade, podendo impactar prazos e valores."
           />
           <p className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
-            Sugestão de fluxo <ArrowRight className="h-4 w-4 text-accent" />
+            Sugestão de fluxo <ArrowRight className="h-4 w-4" />
           </p>
           <div className="mt-8 grid gap-4">
-            {escopo.map((e) => (
+            {escopo.map((e, idx) => (
               <article
                 key={e.tag}
-                className="rounded-2xl border border-border/60 bg-card p-5"
+                className="group rounded-2xl border border-border/60 bg-card/60 backdrop-blur p-6 hover:border-foreground/30 transition"
               >
-                <div className="flex items-center justify-between gap-3 mb-4">
-                  <span className="text-sm font-medium text-muted-foreground">Etapa</span>
-                  <span className="rounded-full bg-accent text-accent-foreground text-xs font-medium px-3 py-1">
+                <div className="flex items-center justify-between gap-3 mb-5">
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+                    Etapa {String(idx + 1).padStart(2, "0")}
+                  </span>
+                  <span className="rounded-full bg-foreground text-background text-xs font-medium px-3 py-1">
                     {e.tag}
                   </span>
                 </div>
                 <ol className="divide-y divide-border/60">
                   {e.items.map((it, i) => (
-                    <li key={it} className="py-3 text-sm text-muted-foreground">
-                      {i + 1}. {it}
+                    <li key={it} className="py-3 text-sm text-muted-foreground flex gap-3">
+                      <span className="text-foreground/40 font-mono text-xs pt-0.5">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span>{it}</span>
                     </li>
                   ))}
                 </ol>
@@ -337,38 +357,34 @@ function Proposta() {
               Custos externos sob responsabilidade da Loulouxshoes: assinaturas Airtable, Make e Z-API.
             </p>
           </div>
-
         </section>
 
-        {/* 9. Diferenciais */}
-        <section className="relative py-14 bg-section rounded-3xl px-6 my-6 border border-border/60 overflow-hidden">
-          <CircleDecor className="-left-20 -bottom-20 w-[400px] h-[400px] text-foreground" />
-          <SectionHeader title="Diferenciais" accent="do Projeto" />
-          <div className="mt-10 space-y-8 relative">
-            {diferenciais.map((d) => (
-              <div key={d.title}>
-                <h3 className="text-lg font-medium">{d.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{d.text}</p>
+        {/* 8. Diferenciais */}
+        <section className="relative py-16 bg-section rounded-3xl px-6 my-6 border border-border/60 overflow-hidden">
+          <SectionHeader title="Diferenciais" accent="do projeto" />
+          <div className="mt-10 grid gap-5">
+            {diferenciais.map(({ icon: Icon, title, text }) => (
+              <div key={title} className="rounded-2xl border border-border/60 bg-background/40 p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="h-9 w-9 rounded-xl bg-foreground text-background flex items-center justify-center">
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  <h3 className="text-base font-medium">{title}</h3>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
               </div>
             ))}
           </div>
         </section>
 
-        {/* 10. Cronograma */}
-        <section className="py-14">
-          <SectionHeader
-            title="Cronograma"
-            accent="do Projeto"
-            subtitle="Contrato, desenvolvimento e publicação."
-          />
+        {/* 9. Cronograma */}
+        <section className="py-16">
+          <SectionHeader title="Cronograma" accent="do projeto" subtitle="Contrato, desenvolvimento e go-live." />
           <div className="mt-10 grid gap-4">
             {cronograma.map((c) => (
-              <div
-                key={c.n}
-                className="rounded-2xl border border-border/60 bg-card p-5"
-              >
+              <div key={c.n} className="rounded-2xl border border-border/60 bg-card/60 p-5">
                 <div className="flex items-start gap-4">
-                  <span className="shrink-0 h-9 w-9 rounded-full bg-accent text-accent-foreground text-sm font-semibold flex items-center justify-center shadow-glow">
+                  <span className="shrink-0 font-display text-2xl font-semibold text-foreground/30">
                     {c.n}
                   </span>
                   <div>
@@ -379,24 +395,21 @@ function Proposta() {
               </div>
             ))}
           </div>
-          <p className="mt-8 flex items-center gap-2 text-sm text-muted-foreground justify-center">
-            Em caso de dúvidas, entre em contato <ArrowRight className="h-4 w-4 text-accent" />
-          </p>
         </section>
 
-        {/* 11. Investimento */}
-        <section className="relative py-14 bg-section rounded-3xl px-6 my-6 border border-border/60 overflow-hidden">
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
+        {/* 10. Investimento */}
+        <section className="relative py-16 bg-section rounded-3xl px-6 my-6 border border-border/60 overflow-hidden">
+          <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
             <span>Onde você está investindo</span>
-            <span className="text-foreground">Prazo de entrega: 40 dias</span>
+            <span className="text-foreground">Entrega: 15 dias</span>
           </div>
-          <div className="h-px bg-gradient-to-r from-accent/80 via-accent/30 to-transparent mt-3" />
+          <div className="h-px bg-gradient-to-r from-foreground via-foreground/30 to-transparent mt-3" />
 
           <ul className="mt-6 divide-y divide-border/60">
             {investimento.map((i) => (
               <li key={i.title} className="py-4">
                 <div className="flex items-start gap-3">
-                  <Check className="h-4 w-4 text-accent mt-1 shrink-0" />
+                  <Check className="h-4 w-4 mt-1 shrink-0" />
                   <div>
                     <h3 className="text-base font-medium">{i.title}</h3>
                     <p className="mt-1 text-sm text-muted-foreground leading-relaxed">{i.desc}</p>
@@ -406,57 +419,55 @@ function Proposta() {
             ))}
           </ul>
 
-          <div className="mt-8 rounded-2xl border border-accent/40 bg-background/50 p-6 shadow-glow">
-            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-              Investimento total
-            </p>
-            <p className="mt-2 text-4xl font-semibold tracking-tight">
+          <div className="mt-8 rounded-2xl border border-foreground/30 bg-background/60 p-6 backdrop-blur shadow-glow">
+            <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">Investimento total</p>
+            <p className="mt-2 font-display text-5xl font-semibold tracking-tight text-shine">
               R$ 3.800<span className="text-2xl text-muted-foreground">,00</span>
             </p>
             <div className="mt-5 space-y-2 text-sm">
               <p className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-accent" />À vista no Pix —{" "}
-                <span className="font-medium">R$ 3.800,00</span>
+                <span className="h-1.5 w-1.5 rounded-full bg-foreground" />
+                À vista no Pix — <span className="font-medium">R$ 3.800,00</span>
               </p>
               <p className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                6x sem juros no cartão —{" "}
-                <span className="font-medium">R$ 633,33/mês</span>
+                <span className="h-1.5 w-1.5 rounded-full bg-foreground" />
+                6× sem juros no cartão — <span className="font-medium">R$ 633,33/mês</span>
               </p>
             </div>
           </div>
         </section>
 
-        {/* 12. CTA final */}
-        <section className="relative py-20 bg-hero rounded-3xl px-6 my-6 border border-border/60 overflow-hidden">
+        {/* 11. CTA */}
+        <section className="relative py-24 bg-hero rounded-3xl px-6 my-6 border border-border/60 overflow-hidden noise">
+          <div className="absolute inset-0 grid-bg opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)]" />
           <img
             src={aethixLogo.url}
             alt="AethiX Digital"
-            className="absolute top-6 right-6 h-8 w-auto invert opacity-80"
+            className="absolute top-6 right-6 h-8 w-auto invert opacity-70"
           />
-          <h2 className="text-5xl sm:text-6xl font-semibold leading-[0.95] tracking-tight">
-            Eai, vamos
+          <h2 className="relative font-display text-5xl sm:text-6xl font-semibold leading-[0.95] tracking-tight">
+            Vamos
             <br />
-            <span className="text-accent">fechar?</span>
+            <span className="text-shine">construir juntos?</span>
           </h2>
 
-          <div className="mt-12 grid grid-cols-2 gap-6 text-sm">
-            <div>
-              <p className="text-muted-foreground">Validade do orçamento:</p>
-              <p className="mt-1 font-medium">30 dias corridos</p>
+          <div className="relative mt-12 grid grid-cols-2 gap-6 text-sm">
+            <div className="border-l-2 border-foreground/30 pl-4">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Validade</p>
+              <p className="mt-2 font-medium">5 dias corridos</p>
             </div>
-            <div>
-              <p className="text-muted-foreground">Prazo de entrega:</p>
-              <p className="mt-1 font-medium">40 dias corridos</p>
+            <div className="border-l-2 border-foreground/30 pl-4">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Entrega</p>
+              <p className="mt-2 font-medium">15 dias corridos</p>
             </div>
           </div>
 
-          <div className="mt-10 flex flex-col gap-3">
+          <div className="relative mt-10 flex flex-col gap-3">
             <a
               href={whatsapp}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full bg-accent text-accent-foreground font-medium px-6 py-4 text-center shadow-glow hover:opacity-90 transition"
+              className="rounded-full bg-foreground text-background font-medium px-6 py-4 text-center hover:opacity-90 transition"
             >
               Fechar pelo WhatsApp
             </a>
